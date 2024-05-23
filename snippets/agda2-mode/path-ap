@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: path-ap
+# key: !a
+# --
+ap (λ ϕ → ?) ?

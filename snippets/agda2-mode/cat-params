@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: cat-params
+# key: 
+# --
+{o ℓ} (C : Precategory o ℓ)

@@ -1,0 +1,4 @@
+# key: !p
+# name: parens
+# --
+\left($1\right)

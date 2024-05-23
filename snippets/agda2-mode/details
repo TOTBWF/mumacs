@@ -1,0 +1,9 @@
+# key: !details
+# name: details
+# --
+<details>
+<summary>$1
+</summary>
+\`\`\`agda
+\`\`\`
+</details>

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: haskell-template
+# --
+-- |
+module `(haskell-guess-module-name-from-file-name (buffer-file-name))`
+  (
+  ) where

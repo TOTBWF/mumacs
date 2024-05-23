@@ -1,0 +1,6 @@
+# key: !q
+# name: quote
+# --
+#+BEGIN_QUOTE
+  $1
+#+END_QUOTE

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: enriched-params
+# key: 
+# --
+{ov ℓv} {V : Precategory ov ℓv}
+{V-monoidal : Monoidal-category V}

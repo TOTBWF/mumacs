@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: disp-reasoning
+# key: !bb
+# --
+{!!} ≡[]⟨ {!!} ⟩
+{!!} ∎

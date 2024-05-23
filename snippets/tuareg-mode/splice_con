@@ -1,0 +1,4 @@
+# key: !splice_con
+# name: splice_con
+# --
+Splice.con $1 @@ fun $1 ->

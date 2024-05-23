@@ -1,0 +1,4 @@
+# key: fixme
+# name: fixme
+# --
+failwith "[FIXME] `(tuareg-current-fun-name)`: $1"

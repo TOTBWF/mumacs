@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: fixme
+# key: !fixme
+# --
+;; [FIXME: Reed M, `(format-time-string "%d/%m/%Y")`] $1

@@ -1,0 +1,4 @@
+# key: !p
+# name: latex-parens
+# --
+\left( $1 \right)

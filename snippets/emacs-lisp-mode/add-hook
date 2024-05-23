@@ -1,0 +1,4 @@
+# key: !hk
+# name: add-hook
+# --
+(add-hook '$1 #'$2)

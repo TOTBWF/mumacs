@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: if
+# key: !if
+# --
+if __ then
+  __
+else
+  __

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: hidden-latex
+# key: !hide
+# --
+\begin{code}[hide]
+$1
+\end{code}

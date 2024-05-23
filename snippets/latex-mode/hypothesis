@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: hypothesis 
+# key: !h
+# --
+\hypo{$1}

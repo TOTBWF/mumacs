@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: hack
+# key: !hack
+# --
+(* [HACK: $1] *)

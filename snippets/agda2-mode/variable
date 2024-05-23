@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: variable
+# key: !variable
+# --
+
+<!--
+```agda
+private variable
+  $!
+```
+-->

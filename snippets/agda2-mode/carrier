@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: carrier
+# key: !c
+# --
+⌞ $1 ⌟

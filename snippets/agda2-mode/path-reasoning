@@ -1,0 +1,5 @@
+# key: !eq
+# name: path-reasoning
+# --
+{!!} ≡⟨ {!!} ⟩
+{!!} ∎

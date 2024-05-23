@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: splice_tm
+# key: !splice_tm
+# --
+RM.lift_cmp @@
+Sem.splice_tm @@
+Splice.term @@
+__

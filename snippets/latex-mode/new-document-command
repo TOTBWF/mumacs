@@ -1,0 +1,4 @@
+# key: !cmd
+# name: new-document-command
+# --
+\NewDocumentCommand{\\$1}{}{$2}

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: block
+# key: !src
+# --
+\`\`\`agda
+$1
+\`\`\`

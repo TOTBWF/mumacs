@@ -1,0 +1,10 @@
+# key: nil
+# name: lagda-template
+# --
+---
+description: |
+  $1
+---
+\`\`\`agda
+module `(replace-regexp-in-string "/" "."  (string-remove-suffix ".lagda.md" (string-remove-prefix "src/" (car (projectile-make-relative-to-root (list (buffer-file-name)))))))` where
+\`\`\`

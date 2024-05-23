@@ -1,0 +1,4 @@
+# key: !rule
+# name: rule
+# --
+\inference {$1} {$2} {$3}

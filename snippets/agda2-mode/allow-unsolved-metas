@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: allow-unsolved-metas
+# key: !au
+# --
+{-# OPTIONS --allow-unsolved-metas #-}

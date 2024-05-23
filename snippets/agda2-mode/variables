@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: variables
+# key: !v
+# --
+<!--
+\`\`\`agda
+private variable
+  $1
+\`\`\`
+-->

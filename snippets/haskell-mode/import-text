@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: import-text
+# key: !text
+# --
+import Data.Text (Text)
+import Data.Text qualified as T

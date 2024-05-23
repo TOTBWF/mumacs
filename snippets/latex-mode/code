@@ -1,0 +1,6 @@
+# key: !src
+# name: code
+# --
+\begin{code}
+$1
+\end{code}

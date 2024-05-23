@@ -1,0 +1,32 @@
+# -*- mode: snippet -*-
+# name: latex-template
+# --
+\documentclass{article}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{xifthen}
+
+\usepackage{color}
+\usepackage[T1]{fontenc}
+\usepackage{mlmodern}
+
+\usepackage{ebproof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Macros
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Document
+
+\title{$1}
+\author{Reed Mullanix}
+
+\begin{document}
+\maketitle
+  $2
+\end{document}

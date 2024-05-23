@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: record-iso
+# key: !ri
+# --
+private unquoteDecl eqv = declare-record-iso eqv (quote $1)

@@ -1,0 +1,4 @@
+# key: let*
+# name: let*
+# --
+let* $1 = __ in

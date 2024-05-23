@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: solve-comp
+# key: !solve-comp
+# --
+sym ($1 e1) ·· p ·· ($1 e2)

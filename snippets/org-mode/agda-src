@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: agda-src 
+# key: !agda
+# --
+#+BEGIN_SRC agda2 :exports code
+  $1
+#+END_SRC

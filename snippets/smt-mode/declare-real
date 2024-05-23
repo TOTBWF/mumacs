@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: declare-real
+# key: !real
+# --
+(declare-const $1 Real)
