@@ -3,7 +3,6 @@
 ;;; Commentary:
 
 ;; Shared configuration for all major modes extending `prog-mode'.
-
 ;;; Code:
 
 (use-package prog-mode
@@ -29,6 +28,12 @@
   (highlight-parentheses-attributes
    '((:inherit show-paren-match))
    "Use the `show-paren-match' face to highlight the first pair of matching parentheses."))
+
+;; Enable `bug-reference-mode' in all `prog-mode' buffers.
+(use-package bug-reference
+  :straight nil
+  :hook
+  (prog-mode . bug-reference-prog-mode))
 
 (provide 'lang/prog)
 ;;; prog.el ends here
