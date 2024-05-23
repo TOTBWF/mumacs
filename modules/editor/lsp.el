@@ -1,17 +1,18 @@
-;;; editor/eglot ---  -*- lexical-binding: t; -*-
+;;; editor/lsp ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+
+;; Configuration for the various LSP clients that Emacs supports.
 
 ;;; Code:
 (require 'editor/company)
 (require 'editor/flycheck)
 
-(require 'eglot)
+;;; Eglot:
 
 (use-package eglot
   :straight nil
   :commands eglot
-  :preface
   :hook
   (eglot . company-mode))
 
@@ -23,5 +24,12 @@
   :config
   (global-flycheck-eglot-mode))
 
-(provide 'editor/eglot)
-;;; eglot.el ends here
+;;; LSP mode
+
+(use-package lsp-mode
+  :commands lsp-mode
+  :custom
+  (lsp-enable-file-watchers nil "Do not watch files; this gets extremely slow."))
+
+(provide 'editor/lsp)
+;;; lsp.el ends here

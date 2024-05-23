@@ -10,7 +10,7 @@
 	     :host github
 	     :repo "leanprover/lean4-mode"
 	     :files ("*.el" "data"))
-  :commands (lean4-mode))
+  :mode "\\.lean\\'")
 
 (provide 'lang/lean)
 ;;; lean.el ends here

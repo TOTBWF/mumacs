@@ -17,8 +17,8 @@
 
 (require 'editor/company)
 (require 'editor/compilation)
-(require 'editor/eglot)
 (require 'editor/flycheck)
+(require 'editor/lsp)
 (require 'editor/projectile)
 (require 'editor/snippets)
 
