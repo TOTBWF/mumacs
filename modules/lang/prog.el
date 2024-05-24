@@ -11,8 +11,12 @@
   (defun prog-mode-setup-display ()
     "Configure display settings for `prog-mode'."
     (setq-local show-trailing-whitespace t))
+  (defun prog-mode-after-save ()
+    "Post-save hook for `prog-mode'."
+    (add-hook 'after-save-hook #'delete-trailing-whitespace nil t))
   :hook
   (prog-mode . prog-mode-setup-display)
+  (prog-mode . prog-mode-after-save)
   (prog-mode . electric-pair-mode))
 
 ;; Instead of using `show-parens-mode', we opt to use the more powerful `highlight-parentheses-mode'.
