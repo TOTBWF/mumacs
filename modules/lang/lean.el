@@ -5,6 +5,7 @@
 ;;; Code:
 
 (use-package lean4-mode
+  :requires polymode
   :straight (lean4-mode
 	     :type git
 	     :host github

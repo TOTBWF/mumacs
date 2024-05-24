@@ -21,6 +21,7 @@
 (require 'editor/lsp)
 (require 'editor/projectile)
 (require 'editor/snippets)
+(require 'editor/polymode)
 
 (require 'lang/agda)
 (require 'lang/elisp)
