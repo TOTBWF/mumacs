@@ -18,7 +18,7 @@ to start up a shell process, and is also more consistent."
 (add-to-path "/usr/bin")
 (add-to-path "/usr/local/bin")
 (add-to-path "/run/current-system/sw/bin")
-
+(add-to-path "~/.local/bin")
 
 (provide 'core/path)
 ;;; path.el ends here
