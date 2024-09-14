@@ -43,18 +43,18 @@
   ;; where pressing a leader key (in our case, `SPC') allows you to
   ;; chord keys without pressing modifiers.
   (defconst meow-file-keymap
-        (define-keymap
-          "r" '("open recent" . recentf-open)
-          "f" '("find file" . find-file)
-          "x" '("delete file" . delete-file)
-          "s" '("save file" . save-buffer)
-          "m" '("find emacs module" . find-emacs-module)
-          "i" '("open init file" . open-init-file)))
+    (define-keymap
+      "r" '("open recent" . recentf-open)
+      "f" '("find file" . find-file)
+      "x" '("delete file" . delete-file)
+      "s" '("save file" . save-buffer)
+      "m" '("find emacs module" . find-emacs-module)
+      "i" '("open init file" . open-init-file)))
 
   (defconst meow-buffer-keymap
-        (define-keymap
-          "b" '("find buffer" . switch-to-buffer)
-          "d" '("kill buffer" . kill-current-buffer)))
+    (define-keymap
+      "b" '("find buffer" . switch-to-buffer)
+      "d" '("kill buffer" . kill-current-buffer)))
 
   (meow-define-keys 'leader
     `("f" . ("file" . ,meow-file-keymap))
@@ -64,12 +64,12 @@
    '("j" . meow-next)
    '("k" . meow-prev)
    '("<escape>" . ignore))
-  ;; This puts all these bindings into scope at all times...
-  ;; This occurs
+
   (meow-define-keys 'leader
     `("SPC" . ("execute command" . execute-extended-command))
     `("," . ("find buffer" . switch-to-buffer))
     `("." . ("find file" . find-file)))
+
   (meow-define-keys 'normal
     '("0" . meow-expand-0)
     '("9" . meow-expand-9)
@@ -131,9 +131,9 @@
     '("z" . meow-pop-selection)
     '("'" . repeat)
     '("=" . meow-indent)
-    '(">" . xref-find-definitions)
+    '(">" . meow-find-ref)
     '(":" . meow-comment)
-    '("<" . xref-go-back)
+    '("<" . meow-pop-marker)
     '("%" . recenter)
     '("<escape>" . ignore))
   (meow-global-mode))
@@ -159,7 +159,8 @@
   :config
   (meow-define-keys 'normal
     '("(" . surround-insert)
-    '(")" . surround-delete)))
+    '(")" . surround-delete)
+    '("{" . surround-change)))
 
 ;; Window management
 (use-package ace-window

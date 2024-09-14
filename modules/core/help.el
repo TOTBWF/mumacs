@@ -36,9 +36,11 @@
   (global-unset-key (kbd "C-h C-f"))
   :bind
   (("C-h f" . helpful-callable)
+   ("C-h F" . describe-face)
    ("C-h v" . helpful-variable)
    ("C-h k" . helpful-key)
-   ("C-h x" . helpful-command)))
+   ("C-h x" . helpful-command)
+   ("C-h '" . describe-char)))
 
 ;; Demos of common elisp functions.
 (use-package elisp-demos
