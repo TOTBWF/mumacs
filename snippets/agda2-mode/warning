@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: warning
+# key: !warning
+# --
+::: warning
+$1
+:::
