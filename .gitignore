@@ -11,3 +11,10 @@
 /auto-save-list/
 /.lsp-session-v1
 /spell-fu/
+/request/
+projectile.cache
+org-roam.db
+/multisession/
+/bookmarks
+.org-id-locations
+/custom.el
