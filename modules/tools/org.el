@@ -1,9 +1,16 @@
 ;;; tools/org ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; We really want to use a version of `org-mode' provided via `straight',
+;; so we make sure to strip out all occurances of the built-in `org' from the
+;; load path.  This will prevent any annoying mistakes when calling `require'
+;; on org-related files.
 
 ;;; Code:
 (require 'core/meow)
+
+;; Remove built-in `org' from the `load-path'; see COMMENTARY.
+(setq load-path (cl-remove-if (-partial #'string-match-p "/lisp/org$") load-path))
 
 ;; Set up a `org' menu for `meow'.
 (defconst meow-org-keymap (define-keymap))
@@ -19,10 +26,9 @@
    '(("OPEN" . font-lock-constant-face)
      ("STOP" . font-lock-comment-face))))
 
-;; Enable links to manpages in org files.
 (use-package ol-man
-  :after org
-  :straight nil)
+  :straight nil
+  :after org)
 
 ;; Zotero link integration
 (use-package zotxt
