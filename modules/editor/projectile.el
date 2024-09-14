@@ -19,7 +19,7 @@
   (:map meow-leader-keymap
 	("p" ("project" . projectile-command-map))))
 
-(use-package ripgrep)
+(use-package rg)
 
 (provide 'editor/projectile)
 ;;; projectile.el ends here
