@@ -30,6 +30,7 @@
 (create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
 
 (use-package agda2-mode
+  :requires compilation
   :preface
   (defun agda2-mode-display-fill-column ()
     "Enable `display-fill-column-indicator-mode' and set the fill column to 72."
