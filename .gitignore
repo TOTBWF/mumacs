@@ -18,3 +18,4 @@ org-roam.db
 /bookmarks
 .org-id-locations
 /custom.el
+/url/
