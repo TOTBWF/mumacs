@@ -12,17 +12,17 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :init
-  (setq yas-indent-line 'fixed)
+  :hook
+  (after-init . yas-global-mode)
   :config
-  (yas-global-mode 1)
+  (require 'meow)
 
-  (setq snippet-keymap (make-sparse-keymap))
-  (define-key snippet-keymap "n" '("new snippet" . yas-new-snippet))
-  (define-key snippet-keymap "i" '("insert snippet" . yas-insert-snippet))
-  (define-key snippet-keymap "e" '("edit snippet" . yas-visit-snippet-file))
-
-  (meow-define-keys 'leader `("s" . ("snippet" . ,snippet-keymap))))
+  (defconst meow-yas-keymap
+    (define-keymap
+      "n" '("new snippet" . yas-new-snippet)
+      "i" '("insert snippet" . yas-insert-snippet)
+      "e" '("edit snippet" . yas-visit-snippet-file)))
+  (meow-define-keys 'leader `("s" . ("snippet" . ,meow-yas-keymap))))
 
 (use-package autoinsert
   :custom
