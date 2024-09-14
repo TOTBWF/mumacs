@@ -8,6 +8,7 @@
 (require 'core/selectrum)
 
 (use-package man
+  :commands man
   :custom
   (manual-program "gman"))
 
