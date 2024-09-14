@@ -7,10 +7,14 @@
 ;;; Code:
 (require 'core/selectrum)
 
+(use-package man
+  :custom
+  (manual-program "gman"))
+
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
   :custom
-  (iman-Man-index-command-and-args '("man" "-k" ".") "MacOS man does not list all man pages when passed ''.")
+  (iman-Man-index-command-and-args '("gman" "-k" "''") "MacOS man does not list all man pages when passed ''.")
   :bind ("C-h C-i" . iman))
 
 (use-package man
