@@ -54,5 +54,8 @@
 ;; Of course we want this!
 (setq enable-recursive-minibuffers t)
 
+;; Start emacs maximized
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+
 (provide 'core/tweaks)
 ;;; tweaks.el ends here
