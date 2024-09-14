@@ -4,13 +4,11 @@
 ;; We really want to use a version of `org-mode' provided via `straight',
 ;; so we make sure to strip out all occurances of the built-in `org' from the
 ;; load path.  This will prevent any annoying mistakes when calling `require'
-;; on org-related files.
+;; on org-related files.  However, this needs to be done *extremely* early
+;; in the load process; see `early-init.el' for the code that handles this.
 
 ;;; Code:
 (require 'core/meow)
-
-;; Remove built-in `org' from the `load-path'; see COMMENTARY.
-(setq load-path (cl-remove-if (-partial #'string-match-p "/lisp/org$") load-path))
 
 ;; Set up a `org' menu for `meow'.
 (defconst meow-org-keymap (define-keymap))
