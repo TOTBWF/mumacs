@@ -9,7 +9,6 @@
 (defconst meow-org-keymap (define-keymap))
 (meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap)))
 
-
 ;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
 (use-package org
   :custom
@@ -20,8 +19,18 @@
    '(("OPEN" . font-lock-constant-face)
      ("STOP" . font-lock-comment-face))))
 
+;; Enable links to manpages in org files.
+(use-package ol-man
+  :after org
+  :straight nil)
+
+;; Zotero link integration
+(use-package zotxt
+  :diminish org-zot-mode
+  :hook (org-mode . org-zotxt-mode))
 
 (use-package org-roam
+  :after org
   :functions
   org-roam-db-autosync-mode
   :config
@@ -73,10 +82,6 @@
      (?C . "☕")
      (?D . "🔬"))))
 
-;; Zotero link integration
-(use-package zotxt
-  :diminish org-zot-mode
-  :hook (org-mode . org-zotxt-mode))
 
 (provide 'tools/org)
 ;;; org.el ends here
