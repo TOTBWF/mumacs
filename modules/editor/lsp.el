@@ -29,7 +29,8 @@
 (use-package lsp-mode
   :commands lsp-mode
   :custom
-  (lsp-enable-file-watchers nil "Do not watch files; this gets extremely slow."))
+  (lsp-enable-file-watchers nil "Do not watch files; this gets extremely slow.")
+  (read-process-output-max (expt 2 16)))
 
 (provide 'editor/lsp)
 ;;; lsp.el ends here
