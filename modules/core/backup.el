@@ -18,7 +18,7 @@
    `((".*" . ,backup-directory))
    "Backup files go in the `autosave' directory.")
   (auto-save-file-name-transforms
-   `((".*" ,backup-directory t))
+   `((".*" ,(file-name-as-directory backup-directory) t))
    "Autosave files go in the `autosave' directory.")
   (backup-by-copying t "Backup via copying instead of renaming.")
   (delete-old-versions t "Silently delete excess backups.")
