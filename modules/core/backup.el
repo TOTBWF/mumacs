@@ -8,7 +8,7 @@
 
 (use-package files
   :straight nil
-  :defer nil
+  :demand t
   :preface
   (defconst backup-directory
     (expand-file-name "autosave" user-emacs-directory)

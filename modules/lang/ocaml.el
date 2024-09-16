@@ -16,9 +16,9 @@
     (find-file (concat (file-name-sans-extension fname) "." ext))))
 
 (use-package tuareg
-  :straight t
-  :config
-  (define-key tuareg-mode-map (kbd "C-c C-s") #'ocaml-switch-interface))
+  :mode ("\\.ml'" "\\.mli'" "\\.opam'")
+  :bind
+  (:map tuareg-mode-map ("C-c C-s" . ocaml-switch-interface)))
 
 (use-package merlin
   :after tuareg
@@ -44,9 +44,7 @@
 
 (use-package ocp-indent
   :after tuareg
-  :preface
-  ;; Silence the byte compiler
-  (declare-function ocp-indent-region "ocp-indent")
+  :functions ocp-indent-region
   :config
   ;; ocp-indent-buffer is broken...
   (advice-add 'ocp-indent-buffer

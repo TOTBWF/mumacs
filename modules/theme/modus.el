@@ -6,6 +6,7 @@
 (require 'core/straight)
 
 (use-package modus-themes
+  :demand t
   :config
   (load-theme 'modus-vivendi t))
 

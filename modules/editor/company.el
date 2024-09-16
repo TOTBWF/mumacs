@@ -10,9 +10,12 @@
 (require 'core/straight)
 
 (use-package company
+  ;; We could try to defer loading this, but our `:company' handler
+  ;; makes this difficult. As such, we just `:demand' it: benchmarking
+  ;; shows that this takes a minimal amount of time anyways.
+  :demand t
   :diminish company-mode
   :commands company-mode
-  :defer t
   :bind (:map company-mode-map
 	      ("C-<tab>" . company-other-backend)))
 

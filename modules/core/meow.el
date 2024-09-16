@@ -24,7 +24,8 @@
 
 ;; Modal editing
 (use-package meow
-  :defer nil
+  ;; No way we can defer loading this; we really do need keystrokes to work ASAP.
+  :demand t
   :custom
   (meow-use-clipboard t "Use the system clipboard.")
   (meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -63,7 +64,8 @@
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
-   '("<escape>" . ignore))
+   '("<escape>" . ignore)
+   '("'" . meow-temp-normal))
 
   (meow-define-keys 'leader
     `("SPC" . ("execute command" . execute-extended-command))
@@ -149,7 +151,7 @@
 (use-package which-key
   :after meow
   :diminish which-key-mode
-  :defer nil
+  :demand t
   :config
   (which-key-mode))
 
@@ -164,9 +166,10 @@
 
 ;; Window management
 (use-package ace-window
-  :after meow
+  :demand t
+  :custom
+  (aw-dispatch-always t)
   :config
-  (setq aw-dispatch-always t)
   (meow-define-keys
       'leader
     '("w" . ("window" . ace-window)))

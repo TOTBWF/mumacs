@@ -11,12 +11,16 @@
 ;;; Eglot:
 
 (use-package eglot
+  ;; Disable for now
+  :disabled
   :straight nil
   :commands eglot
   :hook
   (eglot . company-mode))
 
 (use-package flycheck-eglot
+  ;; Disable for now
+  :disabled
   :after flycheck eglot
   :preface
   ;; Silence the byte compiler.

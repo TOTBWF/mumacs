@@ -7,20 +7,18 @@
 ;;; Code:
 (require 'core/selectrum)
 
-(use-package man
-  :commands man
-  :custom
-  (manual-program "gman"))
-
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
+  :commands iman
   :custom
   (iman-Man-index-command-and-args '("gman" "-k" "''") "MacOS man does not list all man pages when passed ''.")
   :bind ("C-h C-i" . iman))
 
 (use-package man
-  :after selectrum
+  :commands man
   :straight nil
+  :custom
+  (manual-program "gman")
   :bind
   (:map Man-mode-map
 	("/" . ctrlf-forward-literal)))
@@ -28,8 +26,8 @@
 ;; `helpful' provides a nicer help menu.
 (use-package helpful
   :after meow
-  :defer t
-  :init
+  :demand t
+  :preface
   ;; All of our elisp files are source controlled thanks to `straight',
   ;; so we need to set this to be able to easily navigate to them inside
   ;; of help buffers.
@@ -49,10 +47,11 @@
 
 ;; Demos of common elisp functions.
 (use-package elisp-demos
-  :after helpful
-  :defer t
-  :init
-  (advice-add 'helpful-update :after 'elisp-demos-advice-helpful-update))
+  :commands elisp-demos-advice-helpful-update
+  :preface
+  ;; Advice gets added in a `:preface', as we want this to happen even before
+  ;; the package is loaded.
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
 
 ;; Override some annoying keybindings in `Info-mode'.
 (use-package info

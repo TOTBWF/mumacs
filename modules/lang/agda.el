@@ -26,33 +26,49 @@
 
 (require 'editor/snippets)
 
-(create-file-template ".*.agda$" "agda-template" 'agda2-mode)
-(create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
-
 (use-package agda2-mode
-  :requires compilation
+  :mode ("\\.lagda\\.md\\'" . agda2-mode)
   :preface
   (defun agda2-mode-display-fill-column ()
     "Enable `display-fill-column-indicator-mode' and set the fill column to 72."
     (display-fill-column-indicator-mode 1)
     (setq-local fill-column 72))
-  :init
+
+  (create-file-template ".*.agda$" "agda-template" 'agda2-mode)
+  (create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
+
   ;; See COMMENTARY above.
   (with-eval-after-load 'agda2-mode
     (add-hook 'agda2-mode-hook #'agda2-mode-display-fill-column)
-    (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode))
-    (add-to-list 'compilation-error-regexp-alist-alist
-		 '(agda "^[\s-]*\\(?:at \\)?\\(.*\\):\\([0-9]+\\),\\([0-9]+\\)-\\([0-9]+\\)$" 1 2 (3 . 4) 2 1))
-    (add-to-list 'compilation-error-regexp-alist 'agda)))
+
+    ;; Try to activate `agda2-mode'; if this fails, then we switch the program
+    ;; version and try again.
+    (define-advice agda2-mode (:around (fn) agda2-auto-version-switch)
+      (condition-case nil
+	  (funcall fn)
+	(error
+	 (progn
+	   (agda2-set-program-version "")
+	   (funcall fn)))))))
+
+(use-package compilation
+  :straight nil
+  :config
+  (add-to-list 'compilation-error-regexp-alist-alist
+	       '(agda "^[\s-]*\\(?:at \\)?\\(.*\\):\\([0-9]+\\),\\([0-9]+\\)-\\([0-9]+\\)$" 1 2 (3 . 4) 2 1))
+  (add-to-list 'compilation-error-regexp-alist 'agda))
 
 (use-package agda-input
+  ;; We've already done the autoload pass of `agda2-mode', so we don't
+  ;; need to fetch `agda-input' from upstream; we already know how to
+  ;; `require' it.
   :straight nil
   ;; We want to be able to call `set-input-method' with `Agda'
   ;; without opening an agda file, so we force `agda-input' to load
   ;; immediately.
   :demand t
   :functions agda-input-add-translations
-  :init
+  :preface
   ;; See COMMENTARY above.
   (with-eval-after-load 'agda-input
     (agda-input-add-translations

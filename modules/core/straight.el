@@ -36,11 +36,24 @@
 			 :repo "jwiegley/use-package"))
 
 (require 'use-package)
+;; This is handy for debugging.
+(setopt use-package-compute-statistics t)
+;; This makes it easier to track down deferal mistakes; if we need to
+;; `:demand', then we should call it out!
+(setopt use-package-always-defer t)
 
 ;; We want to load this relatively early so that we can restart emacs nicely
 ;; even if we make a mistake in our config.
 (use-package restart-emacs
-  :defer nil)
+  :demand t)
+
+(use-package benchmark-init
+  :disabled
+  :straight (:build (:not compile))
+  :demand t
+  :functions benchmark-init/activate
+  :config
+  (benchmark-init/activate))
 
 ;; "diminish" lets us easily hide active modes from the modeline.
 ;; This seems like a bit of an odd place to load this, but
@@ -58,7 +71,7 @@
 ;; See (info "(elisp) Native Compilation") for more details.
 (use-package comp
   :straight nil
-  :defer nil
+  :demand t
   :if (native-comp-available-p)
   :custom
   (native-comp-speed 2 "Use the highest safe optimization level for native compilation."))

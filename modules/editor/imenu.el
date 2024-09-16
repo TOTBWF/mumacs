@@ -10,7 +10,8 @@
   (:map meow-leader-keymap
 	("i" ("imenu" . imenu))))
 
-(use-package imenu-list)
+(use-package imenu-list
+  :commands imenu-list)
 
 (provide 'editor/imenu)
 ;;; imenu.el ends here

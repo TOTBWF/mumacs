@@ -19,7 +19,7 @@
   (declare-function spell-fu-get-personal-dictionary "spell-fu.el")
   (defun spell-fu-setup-dictionaries ()
     (spell-fu-dictionary-add (spell-fu-get-personal-dictionary "en-personal" "~/.aspell.en.pws")))
-  :commands spell-fu-mode
+  :commands spell-fu-mode spell-fu-word-add
   :hook (spell-fu-mode . spell-fu-setup-dictionaries)
   :bind
   (:map meow-spelling-keymap
@@ -34,4 +34,3 @@
 
 (provide 'editor/spelling)
 ;;; spelling.el ends here
-

@@ -13,10 +13,10 @@
 (use-package yasnippet
   :diminish yas-minor-mode
   :hook
+  ;; FIXME: should be smarter about deferring this. However, benchmarking
+  ;; shows that this is negligible.
   (after-init . yas-global-mode)
   :config
-  (require 'meow)
-
   (defconst meow-yas-keymap
     (define-keymap
       "n" '("new snippet" . yas-new-snippet)
@@ -25,18 +25,20 @@
   (meow-define-keys 'leader `("s" . ("snippet" . ,meow-yas-keymap))))
 
 (use-package autoinsert
+  ;; Easier to just always demand this, and it's fast.
+  :demand t
+  :hook (find-file . auto-insert)
   :custom
   (auto-insert-query nil)
   (auto-insert-alist nil)
-  :preface
-  (defun create-file-template (regex template mode)
-    "Automatically insert the TEMPLATE snippet when REGEX match the file name."
-    (add-to-list 'auto-insert-alist
-		 `(,regex . [(lambda () (yas-expand-snippet (yas-lookup-snippet ,template ',mode)))])))
   :config
   ;; When we open a new file, automatically insert the file template
   (auto-insert-mode 1)
-  (add-hook 'find-file-hook 'auto-insert))
+
+  (defun create-file-template (regex template mode)
+    "Automatically insert the TEMPLATE snippet when REGEX match the file name."
+    (add-to-list 'auto-insert-alist
+		 `(,regex . [(lambda () (yas-expand-snippet (yas-lookup-snippet ,template ',mode)))]))))
 
 (defun camel-case (s)
   "Convert a snake_case string S into camelCase."
