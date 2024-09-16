@@ -14,19 +14,39 @@
 (defconst meow-org-keymap (define-keymap))
 (meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap)))
 
+
 ;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
 (use-package org
   :custom
   (org-id-link-to-org-use-id 'create-if-interactive)
   (org-todo-keywords
-   '((sequence "TODO(t)" "OPEN(o)" "|" "DONE(d)" "STOP(s")))
+   '((sequence "TODO(t)" "OPEN(o)" "WAIT(w)" "|" "DONE(d)" "STOP(s)")))
   (org-todo-keyword-faces
    '(("OPEN" . font-lock-constant-face)
-     ("STOP" . font-lock-comment-face))))
+     ("WAIT" . font-lock-builtin-face)
+     ("STOP" . font-lock-comment-face)))
+  (org-agenda-custom-commands
+   '(("n" "Agenda and all tasks"
+      ((agenda "")
+       (tags-todo "+category={task}+todo={TODO\\|OPEN}-blocked={t}"
+		  ((org-agenda-sorting-strategy
+		    '(priority-down todo-state-down))
+		   (org-agenda-overriding-header
+		    "Active tasks")))
+       (tags-todo "+category={task}+todo={TODO\\|OPEN}+blocked={t}"
+		  ((org-agenda-sorting-strategy
+		    '(priority-down todo-state-down))
+		   (org-agenda-overriding-header
+		    "Blocked tasks"))))))))
 
 (use-package ol-man
   :straight nil
   :after org)
+
+;; Extensible dependencies for `org'.
+(use-package org-edna
+  :after org
+  :hook (org-load . org-edna-mode))
 
 ;; Zotero link integration
 (use-package zotxt
