@@ -4,7 +4,8 @@
 
 ;;; Code:
 (add-to-list 'load-path "~/.config/emacs/modules")
-(setq byte-compile-error-on-warn t)
+
+(setopt byte-compile-error-on-warn t)
 
 ;; Core editor functionality.
 (require 'core/straight)
@@ -22,7 +23,7 @@
 (require 'editor/spelling)
 (require 'editor/lsp)
 (require 'editor/imenu)
-(require 'editor/projectile)
+(require 'editor/project)
 (require 'editor/snippets)
 ;; (require 'editor/polymode)
 
