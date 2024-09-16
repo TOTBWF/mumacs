@@ -157,6 +157,7 @@
 
 ;; Used for wrapping selection in parens, braces, quotes, etc.
 (use-package surround
+  :demand t
   :after meow
   :config
   (meow-define-keys 'normal
