@@ -57,6 +57,7 @@
   :after org
   :functions
   org-roam-db-autosync-mode
+  org-roam-note-find
   :config
   ;; Keep the `org-roam' session synchronized.
   (org-roam-db-autosync-mode 1)
@@ -80,11 +81,19 @@
   ;; HACK: This will get quite slow after a while; should use something smarter as detailed
   ;; in https://d12frosted.io/posts/2021-01-16-task-management-with-roam-vol5.html
   (org-agenda-files '("~/Documents/Notes/"))
+  :config
+  (defun org-roam-node-note-p (node)
+    "Return `nil' if a node is a task, and `t' otherwise"
+    (not (string-equal-ignore-case (org-roam-node-category node) "task")))
 
+  (defun org-roam-note-find ()
+    "Find and open an Org-roam node that is not a task."
+    (interactive current-prefix-arg)
+    (org-roam-node-find nil nil 'org-roam-node-note-p))
   :bind
   (:map meow-org-keymap
 	("a" . org-agenda)
-	("o" . org-roam-node-find)
+	("o" . org-roam-note-find)
 	("c" . org-roam-capture)
 	("l" . org-store-link)
 	("i" . org-roam-node-insert)
