@@ -34,22 +34,30 @@
     (display-fill-column-indicator-mode 1)
     (setq-local fill-column 72))
 
+  (add-hook 'agda2-mode-hook #'agda2-mode-display-fill-column)
+
   (create-file-template ".*.agda$" "agda-template" 'agda2-mode)
   (create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
 
-  ;; See COMMENTARY above.
-  (with-eval-after-load 'agda2-mode
-    (add-hook 'agda2-mode-hook #'agda2-mode-display-fill-column)
-
-    ;; Try to activate `agda2-mode'; if this fails, then we switch the program
-    ;; version and try again.
-    (define-advice agda2-mode (:around (fn) agda2-auto-version-switch)
-      (condition-case nil
-	  (funcall fn)
-	(error
-	 (progn
-	   (agda2-set-program-version "")
-	   (funcall fn)))))))
+  (define-advice agda2-mode (:around (fn) agda2-auto-version-switch)
+    (envrc--update)
+    ;; Check to see if we have the right version of `agda2-mode' before
+    ;; we try to turn the mode on.
+    (condition-case nil
+	(progn (funcall fn))
+      (error
+       (progn
+	 ;; Make sure that we've actually updated `exec-path'.
+	 (envrc--update)
+	 ;; Make sure that we inherit any buffer-local value of `exec-path' when we
+	 ;; try to find the `agda-mode' binary.
+	 (cl-letf
+	     (((default-value 'exec-path) exec-path))
+	   (agda2-set-program-version nil))
+	 ;; Try to run `agda2-mode' again!
+	 (funcall fn)))))
+  ;; See COMMENTARY above: customization goes here.
+  (with-eval-after-load 'agda2-mode))
 
 (use-package compilation
   :straight nil
@@ -100,8 +108,6 @@
   :config
   ;; We have to explicitly `require' here to ensure that the input method is available.
   (require 'agda-input))
-
-
 
 (provide 'lang/agda)
 ;;; agda.el ends here
