@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: latex
+# key: !latex
+# --
+#+BEGIN_LaTeX
+$1
+#+END_LaTeX
