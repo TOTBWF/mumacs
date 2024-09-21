@@ -36,6 +36,7 @@
 			 :repo "jwiegley/use-package"))
 
 (require 'use-package)
+
 ;; This is handy for debugging.
 (setopt use-package-compute-statistics t)
 ;; This makes it easier to track down deferal mistakes; if we need to
@@ -60,6 +61,7 @@
 ;; we use it absolutely everywhere, so we want it right
 ;; out the gate.
 (use-package diminish
+  :demand t
   :functions diminish
   :config
   (diminish 'global-whitespace-mode)
