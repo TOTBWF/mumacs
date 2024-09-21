@@ -41,6 +41,7 @@
    '(("OPEN" . font-lock-constant-face)
      ("WAIT" . font-lock-builtin-face)
      ("STOP" . font-lock-comment-face)))
+  (org-log-done 'time)
   ;; Agenda settings
   (org-agenda-custom-commands
    '(("n" "Agenda and all tasks"
