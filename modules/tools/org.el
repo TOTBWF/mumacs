@@ -14,20 +14,38 @@
 (defconst meow-org-keymap (define-keymap))
 (meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap)))
 
-
 ;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
 (use-package org
+  :preface
+  (defun resize-org-latex-overlays ()
+    "Resize all org latex previews in the current buffer."
+    (cl-loop for o in (car (overlay-lists))
+	     if (eq (overlay-get o 'org-overlay-type) 'org-latex-overlay)
+	     do (plist-put (cdr (overlay-get o 'display))
+			   :scale (expt text-scale-mode-step
+					text-scale-mode-amount))))
+
+  (defun org-mode-add-hooks ()
+    "Hook for adding further minor-mode hooks when we are in `org-mode'."
+    (add-hook 'text-scale-mode-hook #'resize-org-latex-overlays nil t))
+  :hook
+  (org-mode . org-cdlatex-mode)
+  (org-mode . org-mode-add-hooks)
   :custom
+  ;; Linking settings
   (org-id-link-to-org-use-id 'create-if-interactive)
+  ;; TODO settings
   (org-todo-keywords
    '((sequence "TODO(t)" "OPEN(o)" "WAIT(w)" "|" "DONE(d)" "STOP(s)")))
   (org-todo-keyword-faces
    '(("OPEN" . font-lock-constant-face)
      ("WAIT" . font-lock-builtin-face)
      ("STOP" . font-lock-comment-face)))
+  ;; Agenda settings
   (org-agenda-custom-commands
    '(("n" "Agenda and all tasks"
-      ((agenda "")
+      ((agenda ""
+	       ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
        (tags-todo "+category={task}+todo={TODO\\|OPEN}-blocked={t}"
 		  ((org-agenda-sorting-strategy
 		    '(priority-down todo-state-down))
@@ -37,7 +55,55 @@
 		  ((org-agenda-sorting-strategy
 		    '(priority-down todo-state-down))
 		   (org-agenda-overriding-header
-		    "Blocked tasks"))))))))
+		    "Blocked tasks")))
+       (tags-todo "+category={task}+todo={WAIT}"
+		  ((org-agenda-overriding-header
+		    "Blockers")))))))
+  (org-agenda-use-time-grid nil)
+  ;; LaTeX settings
+  ;; Add `mlmodern' as our font, and add the `microtype' package.
+  (org-latex-default-packages-alist
+   '(("" "amsmath" t ("lualatex" "xetex"))
+     ("" "fontspec" t ("lualatex" "xetex"))
+     ("" "mlmodern" t ("pdflatex"))
+     ("AUTO" "inputenc" t ("pdflatex"))
+     ("T1" "fontenc" t ("pdflatex"))
+     ("" "microtype" t ("pdflatex"))
+     ("" "graphicx" t)
+     ("" "longtable" nil)
+     ("" "wrapfig" nil)
+     ("" "rotating" nil)
+     ("normalem" "ulem" t)
+     ("" "amsmath" t ("pdflatex"))
+     ("" "amssymb" t ("pdflatex"))
+     ("" "capt-of" nil)
+     ("" "hyperref" nil)))
+  ;; Default to using `dvisvgm'.
+  (org-preview-latex-default-process 'dvisvgm)
+  ;; `dvisvgm' needs to have a `nil' background color, or it will
+  ;; insert a rectangle that causes the entire SVG to become white.
+  ;; Also take the time to bump up the scale.
+  (org-format-latex-options
+   '(:foreground "White" :background nil :scale 1.65 :html-foreground
+		 "Black" :html-background "Black" :html-scale 1.0
+		 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  ;; Highlight LaTeX snippets in org buffers.
+  (org-highlight-latex-and-related '(latex))
+  :config
+  (defun org-agend-skip-entry-if-blocked-or-done ()
+    "Skip all `org-agenda' entries that are either blocked or marked done."
+    (and (or (org-entry-blocked-p)
+	     (org-entry-is-done-p))
+	 (org-entry-end-position))))
+
+;; `org-timeblock' lets get a better daily view.
+(use-package org-timeblock
+  :commands org-timeblock org-timeblock-list
+  :custom-face
+  (org-timeblock-teaching-face ((t (:background "#00bcff"))))
+  :custom
+  (org-timeblock-tag-colors
+   '(("teaching" . org-timeblock-teaching-face))))
 
 (use-package ol-man
   :straight nil
@@ -45,12 +111,12 @@
 
 ;; Extensible dependencies for `org'.
 (use-package org-edna
-  :after org
+  :diminish org-edna-mode
   :hook (org-load . org-edna-mode))
 
 ;; Zotero link integration
 (use-package zotxt
-  :diminish org-zot-mode
+  :diminish org-zotxt-mode
   :hook (org-mode . org-zotxt-mode))
 
 (use-package org-roam
@@ -73,7 +139,7 @@
       (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: task\n* TODO [#B] ${title}")
       :unnarrowed t)
      ("e" "event" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: event\n* ${title}\nSCHEDULED: %^t")
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: event\n* ${title}\n%^t")
       :unnarrowed t)
      ("p" "person" plain "%?" :target
       (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: person\n* ${title}")
