@@ -40,22 +40,26 @@
   (create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
 
   (define-advice agda2-mode (:around (fn) agda2-auto-version-switch)
-    (envrc--update)
     ;; Check to see if we have the right version of `agda2-mode' before
     ;; we try to turn the mode on.
     (condition-case nil
 	(progn (funcall fn))
       (error
        (progn
-	 ;; Make sure that we've actually updated `exec-path'.
+	 ;; First, update `exec-path'.
 	 (envrc--update)
 	 ;; Make sure that we inherit any buffer-local value of `exec-path' when we
 	 ;; try to find the `agda-mode' binary.
 	 (cl-letf
 	     (((default-value 'exec-path) exec-path))
-	   (agda2-set-program-version nil))
-	 ;; Try to run `agda2-mode' again!
-	 (funcall fn)))))
+	   (agda2-set-program-version nil)
+	   ;; `agda2-set-program-version' calls `unload-feature', so we need to set up
+	   ;; the `auto-mode-alist' again.
+	   (push '("\\.lagda\\.md\\'" . agda2-mode) auto-mode-alist)
+	   ;; Try to run `agda2-mode' again! Note that we do not `funcall' here out of
+	   ;; superstition: I am not able to find good documentation on what exactly happens when
+	   ;; you call a function from something that was just unloaded!
+	   (agda2-mode))))))
   ;; See COMMENTARY above: customization goes here.
   (with-eval-after-load 'agda2-mode))
 
