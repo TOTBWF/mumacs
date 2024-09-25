@@ -63,6 +63,8 @@
   (org-agenda-use-time-grid nil)
   ;; LaTeX settings
   ;; Add `mlmodern' as our font, and add the `microtype' package.
+  ;; We modify this instead of `org-latex-packages-alist' to ensure
+  ;; that we load our font early enough.
   (org-latex-default-packages-alist
    '(("" "amsmath" t ("lualatex" "xetex"))
      ("" "fontspec" t ("lualatex" "xetex"))
@@ -79,6 +81,11 @@
      ("" "amssymb" t ("pdflatex"))
      ("" "capt-of" nil)
      ("" "hyperref" nil)))
+  ;; Add non-typesetting related packages.
+  (org-latex-packages-alist
+   '(("" "tikz" t)
+     ("" "tikz-cd" t)
+     ("" "quiver" t)))
   ;; Default to using `dvisvgm'.
   (org-preview-latex-default-process 'dvisvgm)
   ;; `dvisvgm' needs to have a `nil' background color, or it will
@@ -90,12 +97,17 @@
 		 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
   ;; Highlight LaTeX snippets in org buffers.
   (org-highlight-latex-and-related '(latex))
+  ;; Org babel
+  (org-babel-load-languages
+   '((emacs-lisp . t)
+     (haskell . t)))
   :config
   (defun org-agend-skip-entry-if-blocked-or-done ()
     "Skip all `org-agenda' entries that are either blocked or marked done."
     (and (or (org-entry-blocked-p)
 	     (org-entry-is-done-p))
 	 (org-entry-end-position))))
+
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
@@ -180,7 +192,7 @@
    '((?A . "❗")
      (?B . "⚠️")
      (?C . "☕")
-     (?D . "🔬"))))
+     (?D . "🧊"))))
 
 
 (provide 'tools/org)

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: diagram
+# key: !diagram
+# --
+#+BEGIN_LaTeX
+\begin{tikzcd}
+  $1
+\end{tikzcd}
+#+END_LaTeX

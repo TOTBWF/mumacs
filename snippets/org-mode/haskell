@@ -1,0 +1,8 @@
+# key: !haskell
+# name: haskell
+# --
+#+BEGIN_SRC haskell :results output replace
+:{
+  $1
+:}
+#+END_SRC
