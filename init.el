@@ -5,6 +5,7 @@
 ;;; Code:
 (add-to-list 'load-path "~/.config/emacs/modules")
 
+
 (setopt byte-compile-error-on-warn t)
 
 ;; Core editor functionality.
@@ -30,7 +31,7 @@
 (require 'lang/agda)
 (require 'lang/elisp)
 (require 'lang/latex)
-(require 'lang/lean)
+;; (require 'lang/lean)
 (require 'lang/haskell)
 ;; (require 'lang/narya)
 (require 'lang/nix)
@@ -39,6 +40,7 @@
 
 (require 'tools/magit)
 (require 'tools/direnv)
+(require 'tools/notmuch)
 (require 'tools/org)
 (require 'tools/vterm)
 
