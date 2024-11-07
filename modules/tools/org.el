@@ -100,6 +100,7 @@
   ;; Org babel
   (org-babel-load-languages
    '((emacs-lisp . t)
+     (shell . t)
      (haskell . t)))
   :config
   (defun org-agend-skip-entry-if-blocked-or-done ()
@@ -169,6 +170,7 @@
     "Find and open an Org-roam node that is not a task."
     (interactive current-prefix-arg)
     (org-roam-node-find nil nil 'org-roam-node-note-p))
+
   :bind
   (:map meow-org-keymap
 	("a" . org-agenda)
@@ -194,6 +196,8 @@
      (?C . "☕")
      (?D . "🧊"))))
 
+(use-package ob-async
+  :after org)
 
 (provide 'tools/org)
 ;;; org.el ends here
