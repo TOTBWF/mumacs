@@ -16,9 +16,5 @@
   (emacs-lisp-mode . flycheck-mode)
   (emacs-lisp-mode . company-mode))
 
-(use-package lispy
-  :hook
-  (emacs-lisp-mode . lispy-mode))
-
 (provide 'lang/elisp)
 ;;; elisp.el ends here
