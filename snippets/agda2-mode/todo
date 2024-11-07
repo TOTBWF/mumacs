@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: todo
-# key: todo
+# key: !todo
 # --
-[TODO: Reed M, `(format-time-string "%d/%m/%Y")`] $1
+<!-- [TODO: Reed M, `(format-time-string "%d/%m/%Y")`] $1 -->
