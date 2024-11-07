@@ -55,11 +55,7 @@
 	   (agda2-set-program-version nil)
 	   ;; `agda2-set-program-version' calls `unload-feature', so we need to set up
 	   ;; the `auto-mode-alist' again.
-	   (push '("\\.lagda\\.md\\'" . agda2-mode) auto-mode-alist)
-	   ;; Try to run `agda2-mode' again! Note that we do not `funcall' here out of
-	   ;; superstition: I am not able to find good documentation on what exactly happens when
-	   ;; you call a function from something that was just unloaded!
-	   (agda2-mode))))))
+	   (push '("\\.lagda\\.md\\'" . agda2-mode) auto-mode-alist))))))
   ;; See COMMENTARY above: customization goes here.
   (with-eval-after-load 'agda2-mode))
 
@@ -102,13 +98,15 @@
        ("monus" . "∸")
        ("U" . "⋃")
        ("lsq" . "⊑")
+       ("ls" . "⊏")
        ("cc" . "𝒞")
        ("dd" . "𝒟")
        ("uu" . "⇑")
        ("wl" . "◀")
        ("wr" . "▶")
        ("cw" . "○")
-       ("cf" . "●"))))
+       ("cf" . "●")
+       ("mm" . "↦"))))
   :config
   ;; We have to explicitly `require' here to ensure that the input method is available.
   (require 'agda-input))
