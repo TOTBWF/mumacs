@@ -40,6 +40,7 @@
   (setq meow-leader-keymap (define-keymap))
   (setf (alist-get 'leader meow-keymap-alist) meow-leader-keymap)
 
+
   ;; `meow' comes with a "keypad" system that is close to `god-mode',
   ;; where pressing a leader key (in our case, `SPC') allows you to
   ;; chord keys without pressing modifiers.
@@ -55,7 +56,8 @@
   (defconst meow-buffer-keymap
     (define-keymap
       "b" '("find buffer" . switch-to-buffer)
-      "d" '("kill buffer" . kill-current-buffer)))
+      "d" '("kill buffer" . kill-current-buffer)
+      "x" '("scratch buffer" . scratch-buffer)))
 
   (meow-define-keys 'leader
     `("f" . ("file" . ,meow-file-keymap))
