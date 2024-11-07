@@ -3,8 +3,10 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/meow)
 
-(setq meow-notmuch-search-map (make-keymap))
+(defvar meow-notmuch-search-map (make-keymap))
+
 (meow-define-state notmuch-search
   "Meow state for interacting with the `notmuch' search buffer."
   :lighter "[E]"
@@ -14,7 +16,7 @@
 
 (use-package notmuch
   :commands notmuch
-  :functions notmuch-delete notmuch-recipt
+  :functions notmuch-delete notmuch-recipt notmuch-search-tag
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-tagging-keys
@@ -47,7 +49,7 @@
 (use-package sendmail
   :straight nil
   :custom
-  (send-mail-function sendmail-send-it)
+  (send-mail-function 'sendmail-send-it)
   (sendmail-program "/run/current-system/sw/bin/msmtp")
   (mail-specify-envelope-from t)
   (mail-envelope-from 'header)
