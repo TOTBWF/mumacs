@@ -234,8 +234,14 @@
      (?C . "☕")
      (?D . "🧊"))))
 
-(use-package ob-async
-  :after org)
+(use-package org-upcoming-modeline
+  :after org
+  ;; FIXME: There are byte-compiler errors with org-ql.
+  :no-require t
+  :demand t
+  :commands org-upcoming-modeline-mode
+  :config
+  (org-upcoming-modeline-mode 1))
 
 (provide 'tools/org)
 ;;; org.el ends here
