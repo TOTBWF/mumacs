@@ -8,6 +8,8 @@
 ;; in the load process; see `early-init.el' for the code that handles this.
 
 ;;; Code:
+(require 'face-remap)
+
 (require 'core/meow)
 
 ;; Set up a `org' menu for `meow'.
@@ -16,6 +18,8 @@
 
 ;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
 (use-package org
+  ;; HACK: we demand org to get keybindings to work.
+  :demand t
   :preface
   (defun resize-org-latex-overlays ()
     "Resize all org latex previews in the current buffer."
@@ -24,13 +28,23 @@
 	     do (plist-put (cdr (overlay-get o 'display))
 			   :scale (expt text-scale-mode-step
 					text-scale-mode-amount))))
-
   (defun org-mode-add-hooks ()
     "Hook for adding further minor-mode hooks when we are in `org-mode'."
     (add-hook 'text-scale-mode-hook #'resize-org-latex-overlays nil t))
+
+  ;; We want to byte compile our advice, so we predeclare the functions
+  ;; to make the byte compiler aware of them.
+  (declare-function org-clock-out-mode-line-advice "tools/org.el")
+  (declare-function org-clock-in-mode-line-advice "tools/org.el")
+  :functions
+  org-entry-blocked-p
+  org-entry-is-done-p
+  org-clocking-p
   :hook
   (org-mode . org-cdlatex-mode)
   (org-mode . org-mode-add-hooks)
+  :custom-face
+  (org-block ((t (:background nil))))
   :custom
   ;; Linking settings
   (org-id-link-to-org-use-id 'create-if-interactive)
@@ -79,6 +93,7 @@
      ("normalem" "ulem" t)
      ("" "amsmath" t ("pdflatex"))
      ("" "amssymb" t ("pdflatex"))
+     ("" "stmaryrd" t ("pdflatex"))
      ("" "capt-of" nil)
      ("" "hyperref" nil)))
   ;; Add non-typesetting related packages.
@@ -107,8 +122,25 @@
     "Skip all `org-agenda' entries that are either blocked or marked done."
     (and (or (org-entry-blocked-p)
 	     (org-entry-is-done-p))
-	 (org-entry-end-position))))
+	 (org-entry-end-position)))
 
+  (defconst org-no-clock-mode-line-string
+    (propertize "[No Clock] " 'face 'org-mode-line-no-clock))
+
+  (defface org-mode-line-no-clock
+    '((t (:inherit modus-themes-prominent-error)))
+    "Face used to display that there are no clocked tasks in the mode line."
+    :group 'org-faces)
+
+  (defun org-clock-out-mode-line-advice (&rest _)
+    (when (not (org-clocking-p))
+      (setq global-mode-string (append global-mode-string '(org-no-clock-mode-line-string)))))
+
+  (defun org-clock-in-mode-line-advice (&rest _)
+    (delq 'org-no-clock-mode-line-string global-mode-string))
+
+  (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
+  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice))
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
@@ -126,7 +158,14 @@
 ;; Extensible dependencies for `org'.
 (use-package org-edna
   :diminish org-edna-mode
-  :hook (org-load . org-edna-mode))
+  ;; `org-edna-mode' is a global mode, so we shouldn't attach it to `org-mode-hook'.
+  ;; Moreover, `org-load-hook' is deprecated, so instead we opt to load it after org,
+  ;; `:demand' it, and then immediately enable the mode.
+  :after org
+  :demand t
+  :commands org-edna-mode
+  :config
+  (org-edna-mode))
 
 ;; Zotero link integration
 (use-package zotxt
@@ -137,7 +176,7 @@
   :after org
   :functions
   org-roam-db-autosync-mode
-  org-roam-note-find
+  org-roam-node-find
   :config
   ;; Keep the `org-roam' session synchronized.
   (org-roam-db-autosync-mode 1)
@@ -170,7 +209,6 @@
     "Find and open an Org-roam node that is not a task."
     (interactive current-prefix-arg)
     (org-roam-node-find nil nil 'org-roam-node-note-p))
-
   :bind
   (:map meow-org-keymap
 	("a" . org-agenda)
