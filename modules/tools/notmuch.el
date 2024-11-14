@@ -13,6 +13,7 @@
   :keymap meow-notmuch-search-map)
 
 (add-to-list 'meow-mode-state-list '(notmuch-search-mode . notmuch-search))
+(add-to-list 'meow-mode-state-list '(notmuch-show-mode . motion))
 
 (use-package notmuch
   :commands notmuch
@@ -45,6 +46,10 @@
 	("d" . notmuch-delete)
 	("r" . notmuch-recipt)
 	("SPC" . meow-keypad)))
+
+(use-package ol-notmuch
+  :after notmuch org
+  :demand t)
 
 (use-package sendmail
   :straight nil
