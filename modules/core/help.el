@@ -11,7 +11,8 @@
 (use-package iman
   :commands iman
   :custom
-  (iman-Man-index-command-and-args '("gman" "-k" "''") "MacOS man does not list all man pages when passed ''.")
+  ;; MacOS man does not list all man pages when passed ''.
+  (iman-Man-index-command-and-args '("gman" "-k" "''"))
   :bind ("C-h C-i" . iman))
 
 (use-package man
@@ -47,11 +48,8 @@
 
 ;; Demos of common elisp functions.
 (use-package elisp-demos
-  :commands elisp-demos-advice-helpful-update
-  :preface
-  ;; Advice gets added in a `:preface', as we want this to happen even before
-  ;; the package is loaded.
-  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+  :advice
+  (helpful-update :after elisp-demos-advice-helpful-update))
 
 ;; Override some annoying keybindings in `Info-mode'.
 (use-package info

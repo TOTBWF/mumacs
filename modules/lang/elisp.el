@@ -16,5 +16,9 @@
   (emacs-lisp-mode . flycheck-mode)
   (emacs-lisp-mode . company-mode))
 
+(use-package emacsql
+  :advice
+  (calculate-lisp-indent :around emacsql--calculate-vector-indent))
+
 (provide 'lang/elisp)
 ;;; elisp.el ends here
