@@ -30,10 +30,11 @@
 ;; Load up `use-package', so we can declaratively manage packages.
 ;; Note that we want to use HEAD for `use-package', as we want
 ;; `which-key' integration in the `:bind' form.
-(straight-use-package '(use-package
-			 :type git
-			 :host github
-			 :repo "jwiegley/use-package"))
+(straight-use-package
+ '(use-package
+    :type git
+    :host github
+    :repo "jwiegley/use-package"))
 
 (require 'use-package)
 
