@@ -1,4 +1,3 @@
-
 ;;; lang/agda ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
@@ -23,10 +22,12 @@
 ;;; Code:
 (require 'core/tweaks)
 (require 'core/path)
+(require 'tools/direnv)
 
 (require 'editor/snippets)
 
 (use-package agda2-mode
+  :functions agda2-set-program-version
   :mode ("\\.lagda\\.md\\'" . agda2-mode)
   :preface
   (defun agda2-mode-display-fill-column ()
@@ -38,7 +39,6 @@
 
   (create-file-template ".*.agda$" "agda-template" 'agda2-mode)
   (create-file-template ".*.lagda.md$" "lagda-template" 'agda2-mode)
-
   (define-advice agda2-mode (:around (fn) agda2-auto-version-switch)
     ;; Check to see if we have the right version of `agda2-mode' before
     ;; we try to turn the mode on.
@@ -52,12 +52,20 @@
 	 ;; try to find the `agda-mode' binary.
 	 (cl-letf
 	     (((default-value 'exec-path) exec-path))
-	   (agda2-set-program-version nil)
-	   ;; `agda2-set-program-version' calls `unload-feature', so we need to set up
-	   ;; the `auto-mode-alist' again.
-	   (push '("\\.lagda\\.md\\'" . agda2-mode) auto-mode-alist))))))
+	   (agda2-set-program-version nil))))))
+
   ;; See COMMENTARY above: customization goes here.
-  (with-eval-after-load 'agda2-mode))
+  (with-eval-after-load 'agda2-mode
+    (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode))))
+
+(use-package markdown-mode
+  ;; HACK: `markdown-mode' is a bad citizen, and clobbers `auto-mode-alist'
+  ;; before it even loads. This means that anyone mentioning /anything/
+  ;; `markdown-mode' related will trash the load order.
+  ;; We actually need to force `markdown-mode' to load here; very frustrating!
+  :demand t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode)))
 
 (use-package compilation
   :straight nil
