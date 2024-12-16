@@ -37,8 +37,7 @@ NAME, KEYWORD, and ARGS are explained in the `use-package' documentation."
        (lambda (key)
 	 (or (use-package-non-nil-symbolp key)
 	     (and (consp key)
-		  (use-package-non-nil-symbolp (car key))
-		  )))
+		  (use-package-non-nil-symbolp (car key)))))
        #'use-package-recognize-function
        name label args t))))
 
