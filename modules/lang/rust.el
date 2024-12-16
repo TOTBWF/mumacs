@@ -5,7 +5,7 @@
 ;;; Code:
 (require 'core/path)
 
-(add-to-path "~/.cargo/bin")
+(add-to-path "~/.cargo/bin/")
 
 (use-package rust-mode)
 
