@@ -131,17 +131,17 @@
    '(("n" "Agenda and all tasks"
       ((agenda ""
                ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
-       (tags-todo "+category={task}+todo={TODO\\|OPEN}-blocked={t}-borceux"
+       (tags-todo "+task+todo={TODO\\|OPEN}-blocked={t}-borceux"
                   ((org-agenda-sorting-strategy
                     '(priority-down todo-state-down))
                    (org-agenda-overriding-header
                     "Active tasks")))
-       (tags-todo "+category={task}+todo={TODO\\|OPEN}+blocked={t}-borceux"
+       (tags-todo "+task+todo={TODO\\|OPEN}+blocked={t}-borceux"
                   ((org-agenda-sorting-strategy
                     '(priority-down todo-state-down))
                    (org-agenda-overriding-header
                     "Blocked tasks")))
-       (tags-todo "+category={task}+todo={WAIT}-borceux"
+       (tags-todo "+task+todo={WAIT}-borceux"
                   ((org-agenda-overriding-header
                     "Blockers")))))
      ("b" "Borceux"
@@ -208,12 +208,12 @@
   org-roam-db-query
   :preface
   (defun org-roam-node-note-p (node)
-    "Return `nil' if a node is a task, and `t' otherwise"
-    (not (string-equal-ignore-case (org-roam-node-category node) "task")))
+    "Return `nil' if a node is a node, and `t' otherwise"
+    (not (member "task" (org-roam-node-tags node))))
 
   (defun org-roam-node-task-p (node)
     "Return `nil' if a node is a task, and `t' otherwise"
-    (string-equal-ignore-case (org-roam-node-category node) "task"))
+    (member "task" (org-roam-node-tags node)))
 
   (defun org-roam-note-find ()
     "Find and open an Org-roam node that is not a task."
@@ -233,16 +233,19 @@
   (org-roam-dailies-directory "journals/")
   (org-roam-capture-templates
    '(("n" "note" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: note\n* ${title}\n")
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :note:\n* ${title}\n")
       :unnarrowed t)
      ("t" "task" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: task\n* TODO [#B] ${title}")
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:\n* TODO [#B] ${title}")
+      :unnarrowed t)
+     ("l" "1lab task" plain "%?" :target
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:1lab:\n* TODO [#B] ${title}")
       :unnarrowed t)
      ("e" "event" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: event\n* ${title}\n%^t")
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n* ${title}\n%^t")
       :unnarrowed t)
      ("p" "person" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: person\n* ${title}")
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :person:\n* ${title}")
       :unnarrowed t)))
   (org-agenda-files '("~/Documents/Notes/"))
   :bind
