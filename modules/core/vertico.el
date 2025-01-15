@@ -1,4 +1,4 @@
-;;; core/selectrum ---  -*- lexical-binding: t; -*-
+;;; core/vertico.el ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -6,22 +6,22 @@
 (require 'core/straight)
 (require 'core/meow)
 
-(require 'use-package)
-(use-package selectrum
+(use-package vertico
+  :straight (:files (:defaults "extensions/*"))
+  :commands vertico-mode
   :demand t
-  :functions selectrum-mode
-  :config
-  (selectrum-mode 1))
+  :init
+  (vertico-mode))
 
-(use-package selectrum-prescient
-  :after selectrum
+(use-package vertico-prescient
+  :after vertico
   :demand t
-  :functions selectrum-prescient-mode
+  :functions vertico-prescient-mode
   :config
-  (selectrum-prescient-mode 1))
+  (vertico-prescient-mode 1))
 
 ;; `consult' provides a bunch of `completing-read' functions for
-;; various search perations.
+;; various search operations.
 (use-package consult
   :demand t)
 
@@ -39,5 +39,6 @@
   (define-key ctrlf-mode-map (kbd "C-j") #'ctrlf-forward-literal)
   (define-key ctrlf-mode-map (kbd "C-k") #'ctrlf-backward-literal))
 
-(provide 'core/selectrum)
-;;; core/selectrum.el ends here
+
+(provide 'core/vertico)
+;;; vertico.el ends here

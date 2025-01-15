@@ -15,7 +15,7 @@
 (require 'core/tweaks)
 (require 'core/meow)
 (require 'core/help)
-(require 'core/selectrum)
+(require 'core/vertico)
 (require 'core/backup)
 
 (require 'editor/company)
