@@ -20,14 +20,16 @@
   (haskell-interactive-popup-errors nil)
   (haskell-process-args-cabal-repl
    (mapcar
-    (lambda (opt) (concat "--ghc-option="))
+    (lambda (opt) (concat "--ghc-option=" opt))
     '("-ferror-spans"
-     "-fdefer-typed-holes"
-     "-fno-diagnostics-show-caret"
-     "-fmax-valid-hole-fits=0")))
+      "-fdefer-typed-holes"
+      "-fmax-relevant-binds=0"
+      "-fno-diagnostics-show-caret"
+      "-fmax-valid-hole-fits=0")))
   (haskell-process-args-ghci
    '("-ferror-spans"
      "-fdefer-typed-holes"
+     "-fmax-relevant-binds=0"
      "-fno-diagnostics-show-caret"
      "-fmax-valid-hole-fits=0")))
 
