@@ -52,11 +52,13 @@
   :preface
   (require 'spell-fu)
   (defun spell-fu-LaTeX-hook ()
-    (message "Spell fu!")
-    (setq spell-fu-faces-include '(default))
+    (setq spell-fu-faces-exclude
+	  '(font-lock-constant-face
+	    font-lock-function-name-face
+	    font-latex-sedate-face
+	    font-latex-math-face))
     (spell-fu-mode 1))
   :hook (LaTeX-mode . spell-fu-LaTeX-hook))
-
 
 (use-package reftex
   :straight nil
@@ -74,22 +76,35 @@
   (LaTeX-mode . (company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
-  :preface
   :hook
   (LaTeX-mode . turn-on-cdlatex)
   :custom
   (cdlatex-sub-super-scripts-outside-math-mode nil)
   (cdlatex-takeover-dollar nil)
+  (cdlatex-env-alist
+   '(("figure"
+      "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}"
+      )))
   :bind
   (:map meow-latex-map
 	("e" . cdlatex-environment)))
 
 (use-package math-delimiters
+  :demand t
   :bind
   (:map cdlatex-mode-map
 	("$" . nil))
   (:map LaTeX-mode-map
 	("$" . math-delimiters-insert)))
+
+(use-package xenops
+  :commands
+  xenops-mode
+  :config
+  ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
+  ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
+  ;; To work around this, we need to apply this customization after the package loads.
+  (setq xenops-math-image-scale-factor 1.65))
 
 (use-package tex-parens
   :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
