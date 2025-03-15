@@ -5,7 +5,6 @@
 ;; tweaks to `info'.
 
 ;;; Code:
-(require 'core/selectrum)
 
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
@@ -58,6 +57,11 @@
   (:map Info-mode-map
 	("l" . meow-right)
 	("h" . meow-left)))
+
+(use-package marginalia
+  :commands marginalia-mode
+  :init
+  (marginalia-mode))
 
 (provide 'core/help)
 ;;; help.el ends here
