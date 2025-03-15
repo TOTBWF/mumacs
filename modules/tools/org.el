@@ -85,16 +85,20 @@
   (org-latex-packages-alist
    '(("" "tikz" t)
      ("" "tikz-cd" t)
-     ("" "quiver" t)))
+     ("" "quiver" t)
+     ("" "preamble" t))) ;; ~/Library/texmf/tex/latex/mystyles/
   ;; Default to using `dvisvgm'.
   (org-preview-latex-default-process 'dvisvgm)
-  ;; `dvisvgm' needs to have a `nil' background color, or it will
+  ;; `dvisvgm' needs to have a non-black background color, or it will
   ;; insert a rectangle that causes the entire SVG to become white.
-  ;; Also take the time to bump up the scale.
   (org-format-latex-options
-   '(:foreground "White" :background nil :scale 1.65 :html-foreground
-                 "Black" :html-background "Black" :html-scale 1.0
-                 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+	'(:foreground "white" :background "#010101" :scale 1.65 :html-foreground
+                      "white" :html-background "#010101" :html-scale 1.65
+                      :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  ;; Similar hack is required for source blocks.
+  (org-src-block-faces
+	'(("latex" (:foreground "white" :background "#010101"))))
+  ;; Also take the time to bump up the scale.
   ;; Highlight LaTeX snippets in org buffers.
   (org-highlight-latex-and-related '(native))
   ;; Org babel
@@ -121,16 +125,25 @@
   (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
   (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice))
 
+
 (use-package org-agenda
   :straight nil
   :demand t
   :after org
   :custom
+  (org-agenda-inhibit-startup t)
   (org-agenda-use-time-grid nil)
+  (org-agenda-tags-column -80)
+  (org-agenda-prefix-format
+   '((agenda . "  %?-12t% s")
+     (todo . "  ")
+     (tags . "  ")
+     (search . "  ")))
   (org-agenda-custom-commands
    '(("n" "Agenda and all tasks"
       ((agenda ""
-               ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
+               ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))
+		))
        (tags-todo "+task+todo={TODO\\|OPEN}-blocked={t}-borceux"
                   ((org-agenda-sorting-strategy
                     '(priority-down todo-state-down))
@@ -168,6 +181,7 @@
              (org-entry-is-done-p))
          (org-entry-end-position))))
 
+
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
   :commands org-timeblock org-timeblock-list
@@ -177,6 +191,7 @@
   (org-timeblock-tag-colors
    '(("teaching" . org-timeblock-teaching-face))))
 
+;; `ol-man' provides links to manpages.
 (use-package ol-man
   :straight nil
   :after org)
@@ -232,23 +247,25 @@
   (org-roam-directory "~/Documents/Notes")
   (org-roam-dailies-directory "journals/")
   (org-roam-capture-templates
-   '(("n" "note" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :note:\n* ${title}\n")
+   '(("n" "note" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :note:\n* ${title}\n")
       :unnarrowed t)
-     ("t" "task" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:\n* TODO [#B] ${title}")
+     ("t" "task" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:\n* TODO [#B] ${title}")
       :unnarrowed t)
-     ("l" "1lab task" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:1lab:\n* TODO [#B] ${title}")
+     ("l" "1lab task" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:1lab:\n* TODO [#B] ${title}")
       :unnarrowed t)
-     ("e" "event" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n* ${title}\n%^t")
+     ("e" "event" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n* ${title}\n%^t")
       :unnarrowed t)
-     ("p" "person" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :person:\n* ${title}")
+     ("p" "person" plain "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :person:\n* ${title}")
       :unnarrowed t)))
   (org-agenda-files '("~/Documents/Notes/"))
   :bind
+  (:map org-mode-map
+	("C-c C-q" . org-roam-tag-add))
   (:map meow-org-keymap
         ("a" . org-agenda)
         ("o" . org-roam-note-find)
@@ -277,6 +294,16 @@
      (?C . "☕")
      (?D . "🧊"))))
 
+
+(use-package math-delimiters
+  ;; :demand t
+  ;; :after org-mode
+  :bind
+  (:map org-mode-map
+	("$" . math-delimiters-insert)))
+
+
+
 ;; TOO SLOW
 ;; (use-package org-upcoming-modeline
 ;;   :after org
@@ -286,6 +313,9 @@
 ;;   :commands org-upcoming-modeline-mode
 ;;   :config
 ;;   (org-upcoming-modeline-mode 1))
+
+(use-package org-roam-ui
+  :commands org-roam-ui)
 
 (provide 'tools/org)
 ;;; org.el ends here
