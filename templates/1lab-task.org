@@ -1,0 +1,7 @@
+#+title: ${title}
+#+filetags: :task:1lab:
+
+* TODO [#B] ${title}
+:PROPERTIES:
+:BLOCKER:  children ()
+:END:
