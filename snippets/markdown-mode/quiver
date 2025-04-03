@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: quiver
+# key: !quiver
+# --
+~~~{.quiver}
+$1
+~~~

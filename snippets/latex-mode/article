@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: article
+# key: !article
+# --
+\documentclass{article}
+
+\RequirePackage{mlmodern}
+
+\title{$1}
+\author{Reed Mullanix \\ 400549497 \\ \texttt{mullanir@mcmaster.ca}}
+
+\begin{document}
+
+\maketitle
+
+\end{document}

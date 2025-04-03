@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: definition
+# key: !def
+# --
+:::{.definition #$1}
+:::
