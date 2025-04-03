@@ -8,7 +8,8 @@
 (require 'outline)
 (require 'info)
 
-(setq meow-latex-map (make-keymap))
+(defconst meow-latex-map (make-keymap))
+
 (meow-define-state latex
   "Meow state for interacting with latex documents."
   :lighter "[L]"
@@ -18,7 +19,7 @@
 
 ;; HACK: This is really bad: I should be adding this as a per-mode binding that resides in the local map.
 (defun turn-on-meow-latex ()
-  "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'"
+  "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'."
   (meow-define-keys 'normal '("C" . meow-latex-mode)))
 
 (meow-define-keys 'latex
@@ -36,14 +37,17 @@
   '("s" . outline-move-subtree-down))
 
 (use-package auctex
-  :hook (LaTeX-mode . turn-on-meow-latex)
-  :hook (LaTeX-mode . outline-minor-mode)
+  :hook
+  (LaTeX-mode . turn-on-meow-latex)
+  (LaTeX-mode . outline-minor-mode)
   :custom
   (font-latex-user-keyword-classes
    '(("citations" (("cite" "{") ("citep" "{") ("citet" "{")) font-lock-constant-face command)))
   (LaTeX-verbatim-environments
    '("code" "verbatim" "verbatim*" "filecontents" "filecontents*"))
   :bind
+  (:map LaTeX-mode-map
+	("$" . math-delimiters-insert))
   (:map meow-latex-map
 	("S" . LaTeX-section)))
 
@@ -86,16 +90,14 @@
       "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}"
       )))
   :bind
+  ;; Relinquish control of the `$' key.
+  (:map cdlatex-mode-map
+	("$" . nil))
   (:map meow-latex-map
 	("e" . cdlatex-environment)))
 
 (use-package math-delimiters
-  :demand t
-  :bind
-  (:map cdlatex-mode-map
-	("$" . nil))
-  (:map LaTeX-mode-map
-	("$" . math-delimiters-insert)))
+  :commands math-delimiters-insert)
 
 (use-package xenops
   :commands
@@ -104,7 +106,9 @@
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
   ;; To work around this, we need to apply this customization after the package loads.
-  (setq xenops-math-image-scale-factor 1.65))
+  (setq xenops-math-image-scale-factor 1.65)
+  (setq xenop)
+  )
 
 (use-package tex-parens
   :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
