@@ -123,7 +123,10 @@
     (delq 'org-no-clock-mode-line-string global-mode-string))
 
   (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
-  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice))
+  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
+  :bind
+  (:map org-mode-map
+	("$" . math-delimiters-insert)))
 
 
 (use-package org-agenda
@@ -239,6 +242,10 @@
     "Find and open an Org-roam node that is a task."
     (interactive current-prefix-arg)
     (org-roam-node-find nil nil 'org-roam-node-task-p))
+
+  (defun org-roam-get-template (file)
+    "Construct the path to the template FILE."
+    (f-join user-emacs-directory "templates" file))
   :config
   ;; Keep the `org-roam' session synchronized.
   (org-roam-db-autosync-mode 1)
@@ -247,22 +254,27 @@
   (org-roam-directory "~/Documents/Notes")
   (org-roam-dailies-directory "journals/")
   (org-roam-capture-templates
-   '(("n" "note" plain "%?"
-      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :note:\n* ${title}\n")
+   `(("n" "note" plain
+      (file ,(org-roam-get-template "note.org"))
+      :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
-     ("t" "task" plain "%?"
-      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:\n* TODO [#B] ${title}")
+     ("t" "task" plain
+      (file ,(org-roam-get-template "task.org"))
+      :target (file "tasks/%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
-     ("l" "1lab task" plain "%?"
-      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task:1lab:\n* TODO [#B] ${title}")
+     ("l" "1lab task" plain
+      (file ,(org-roam-get-template "1lab-task.org"))
+      :target (file "tasks/%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
-     ("e" "event" plain "%?"
-      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n* ${title}\n%^t")
+     ("e" "event" plain
+      (file ,(org-roam-get-template "event.org"))
+      :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
-     ("p" "person" plain "%?"
-      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :person:\n* ${title}")
+     ("p" "person" plain
+      (file ,(org-roam-get-template "person.org"))
+      :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)))
-  (org-agenda-files '("~/Documents/Notes/"))
+  (org-agenda-files '("~/Documents/Notes/tasks"))
   :bind
   (:map org-mode-map
 	("C-c C-q" . org-roam-tag-add))
@@ -293,15 +305,6 @@
      (?B . "⚠️")
      (?C . "☕")
      (?D . "🧊"))))
-
-
-(use-package math-delimiters
-  ;; :demand t
-  ;; :after org-mode
-  :bind
-  (:map org-mode-map
-	("$" . math-delimiters-insert)))
-
 
 
 ;; TOO SLOW
