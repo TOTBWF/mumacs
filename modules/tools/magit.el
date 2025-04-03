@@ -49,6 +49,10 @@
   :after magit org
   :demand t)
 
+(use-package orgit-forge
+  :after magit org forge
+  :demand t)
+
 (use-package git-timemachine
   :commands git-timemachine
   :bind
