@@ -51,6 +51,12 @@
   (:map meow-latex-map
 	("S" . LaTeX-section)))
 
+(use-package tex-mode
+  :straight nil
+  :bind
+  (:map latex-mode-map
+	("$" . math-delimiters-insert)))
+
 ;; Set up `spell-fu', and exclude some faces from spellchecking.
 (use-package spell-fu
   :preface
@@ -82,6 +88,7 @@
 (use-package cdlatex
   :hook
   (LaTeX-mode . turn-on-cdlatex)
+  (latex-mode . turn-on-cdlatex)
   :custom
   (cdlatex-sub-super-scripts-outside-math-mode nil)
   (cdlatex-takeover-dollar nil)
@@ -102,18 +109,18 @@
 (use-package xenops
   :commands
   xenops-mode
+  xenops-dwim
   :config
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
   ;; To work around this, we need to apply this customization after the package loads.
-  (setq xenops-math-image-scale-factor 1.65)
-  (setq xenop)
-  )
+  (setq xenops-math-image-scale-factor 1.65))
 
 (use-package tex-parens
   :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
   :hook
   (LaTeX-mode . tex-parens-mode)
+  (latex-mode . tex-parens-mode)
   :bind
   (:map meow-latex-map
 	("(" . tex-parens-backward-sexp)

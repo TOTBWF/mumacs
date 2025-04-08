@@ -11,6 +11,7 @@
 (require 'face-remap)
 
 (require 'core/meow)
+(require 'lang/latex)
 
 ;; Set up a `org' menu for `meow'.
 (defconst meow-org-keymap (define-keymap))
@@ -31,6 +32,14 @@
   (defun org-mode-add-hooks ()
     "Hook for adding further minor-mode hooks when we are in `org-mode'."
     (add-hook 'text-scale-mode-hook #'resize-org-latex-overlays nil t))
+
+  (defun org-xenops-dwim (&optional arg)
+    "Enable `xenops-mode' if it is not already enabled,
+and then invoke `xenops-dwim' with the prefix argument ARG."
+    (interactive "P")
+    (unless (and (featurep 'xenops) (xenops-mode))
+      (xenops-mode 1))
+    (xenops-dwim arg))
 
   ;; We want to byte compile our advice, so we predeclare the functions
   ;; to make the byte compiler aware of them.
@@ -92,12 +101,12 @@
   ;; `dvisvgm' needs to have a non-black background color, or it will
   ;; insert a rectangle that causes the entire SVG to become white.
   (org-format-latex-options
-	'(:foreground "white" :background "#010101" :scale 1.65 :html-foreground
+        '(:foreground "white" :background "#010101" :scale 1.65 :html-foreground
                       "white" :html-background "#010101" :html-scale 1.65
                       :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
   ;; Similar hack is required for source blocks.
   (org-src-block-faces
-	'(("latex" (:foreground "white" :background "#010101"))))
+        '(("latex" (:foreground "white" :background "#010101"))))
   ;; Also take the time to bump up the scale.
   ;; Highlight LaTeX snippets in org buffers.
   (org-highlight-latex-and-related '(native))
@@ -126,8 +135,8 @@
   (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
   :bind
   (:map org-mode-map
-	("$" . math-delimiters-insert)))
-
+        ("$" . math-delimiters-insert)
+        ("C-c C-x C-l" . org-xenops-dwim)))
 
 (use-package org-agenda
   :straight nil
@@ -146,7 +155,7 @@
    '(("n" "Agenda and all tasks"
       ((agenda ""
                ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))
-		))
+                ))
        (tags-todo "+task+todo={TODO\\|OPEN}-blocked={t}-borceux"
                   ((org-agenda-sorting-strategy
                     '(priority-down todo-state-down))
@@ -252,7 +261,13 @@
   :custom
   ;; Make sure that `org-roam' uses the same directory as `logseq'.
   (org-roam-directory "~/Documents/Notes")
+  (org-directory "~/Documents/Notes")
   (org-roam-dailies-directory "journals/")
+  (org-roam-file-exclude-regexp '("data/" "logseq/bak/"))
+  (org-roam-dailies-capture-templates
+   '(("d" "default" plain
+      (file ,(org-roam-get-template "daily.org"))
+      :target (file "%<%Y-%m-%d>.org"))))
   (org-roam-capture-templates
    `(("n" "note" plain
       (file ,(org-roam-get-template "note.org"))
@@ -268,16 +283,16 @@
       :unnarrowed t)
      ("e" "event" plain
       (file ,(org-roam-get-template "event.org"))
-      :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
+      :target (file "events/%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
      ("p" "person" plain
       (file ,(org-roam-get-template "person.org"))
       :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)))
-  (org-agenda-files '("~/Documents/Notes/tasks"))
+  (org-agenda-files '("~/Documents/Notes/tasks" "~/Documents/Notes/events"))
   :bind
   (:map org-mode-map
-	("C-c C-q" . org-roam-tag-add))
+        ("C-c C-q" . org-roam-tag-add))
   (:map meow-org-keymap
         ("a" . org-agenda)
         ("o" . org-roam-note-find)
@@ -306,6 +321,33 @@
      (?C . "☕")
      (?D . "🧊"))))
 
+(use-package org-ql
+  :after org
+  :custom
+  (org-ql-views
+   '(("Notes: Empty Notes"
+      :buffers-files org-roam-list-files
+      :query
+      (and (empty-entry) (tags "note") (level 1))
+      :title "Empty Notes")
+     ("Notes: Untagged Notes"
+      :buffers-files org-roam-list-files
+      :query
+      (and (untagged "note") (level 1))
+      :title "Untagged Notes")))
+  :config
+  (org-ql-defpred empty-entry ()
+    "Return non-nil if the current entry contains no text beyond the headline."
+    :body
+    (save-excursion
+      (save-match-data
+        (forward-line)
+        (not (re-search-forward "[^[:space:]]" (save-excursion (org-entry-end-position)) t 1)))))
+
+  (org-ql-defpred untagged (&rest tags)
+    "Return non-nil if the tags of the current entry are a subset of a list of tags."
+    :body
+    (cl-subsetp (org-get-tags) tags)))
 
 ;; TOO SLOW
 ;; (use-package org-upcoming-modeline
