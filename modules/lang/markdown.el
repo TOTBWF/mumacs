@@ -17,7 +17,7 @@
   (defun spell-fu-markdown-hook ()
     (setq spell-fu-faces-exclude '(markdown-code-face markdown-comment-face markdown-math-face))
     (spell-fu-mode 1))
-  :hook (markdown-mode . spell-fu-markdown-hook))
+  :hook (markdown-mode-hook . spell-fu-markdown-hook))
 
 (provide 'lang/markdown)
 ;;; markdown.el ends here

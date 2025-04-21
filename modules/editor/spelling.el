@@ -20,7 +20,7 @@
   (defun spell-fu-setup-dictionaries ()
     (spell-fu-dictionary-add (spell-fu-get-personal-dictionary "en-personal" "~/.aspell.en.pws")))
   :commands spell-fu-mode spell-fu-word-add
-  :hook (spell-fu-mode . spell-fu-setup-dictionaries)
+  :hook (spell-fu-mode-hook . spell-fu-setup-dictionaries)
   :bind
   (:map meow-spelling-keymap
 	("a" . spell-fu-word-add)

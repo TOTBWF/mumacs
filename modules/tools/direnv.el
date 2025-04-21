@@ -5,7 +5,7 @@
 ;;; Code:
 (use-package envrc
   :hook
-  (after-init . envrc-global-mode))
+  (after-init-hook . envrc-global-mode))
 
 (provide 'tools/direnv)
 ;;; direnv.el ends here

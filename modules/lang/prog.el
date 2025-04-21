@@ -15,9 +15,9 @@
     "Post-save hook for `prog-mode'."
     (add-hook 'after-save-hook #'delete-trailing-whitespace nil t))
   :hook
-  (prog-mode . prog-mode-setup-display)
-  (prog-mode . prog-mode-after-save)
-  (prog-mode . electric-pair-mode))
+  (prog-mode-hook . prog-mode-setup-display)
+  (prog-mode-hook . prog-mode-after-save)
+  (prog-mode-hook . electric-pair-mode))
 
 ;; Instead of using `show-parens-mode', we opt to use the more powerful `highlight-parentheses-mode'.
 (use-package highlight-parentheses
@@ -32,12 +32,6 @@
   (highlight-parentheses-attributes
    '((:inherit show-paren-match))
    "Use the `show-paren-match' face to highlight the first pair of matching parentheses."))
-
-;; Enable `bug-reference-mode' in all `prog-mode' buffers.
-(use-package bug-reference
-  :straight nil
-  :hook
-  (prog-mode . bug-reference-prog-mode))
 
 (provide 'lang/prog)
 ;;; prog.el ends here

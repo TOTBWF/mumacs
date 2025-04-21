@@ -18,6 +18,8 @@
   :tag "Narya Command"
   :options '("narya"))
 
+(setq narya-command "~/Documents/Projects/narya/_build/install/default/bin/narya")
+
 (defcustom narya-command-flags '("-dtt" "-verbose" "-discreteness")
   "Flags to pass to `narya'."
   :group 'narya
@@ -145,5 +147,5 @@ Shortcuts for interacting with `narya-mode':
 (add-to-list 'auto-mode-alist '("\\.ny\\'" . narya-mode))
 
 
-(provide 'narya-mode)
+(provide 'lang/narya)
 ;;; narya-mode.el ends here

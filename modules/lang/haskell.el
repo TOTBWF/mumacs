@@ -8,8 +8,6 @@
 (use-package haskell-mode
   :mode "\\.hs\\'"
   :init
-  (add-to-path "~/.cabal/bin")
-  (add-to-path "~/.ghcup/bin/")
   ;; :hook
   ;; (haskell-mode . lsp)
   ;; (haskell-mode . interactive-haskell-mode)

@@ -13,8 +13,8 @@
   ;; Auto-insert header and `provide' block when a file is created.
   (create-file-template ".*.el$" "emacs-lisp-template" 'emacs-lisp-mode)
   :hook
-  (emacs-lisp-mode . flycheck-mode)
-  (emacs-lisp-mode . company-mode))
+  (emacs-lisp-mode-hook . flycheck-mode)
+  (emacs-lisp-mode-hook . company-mode))
 
 (use-package emacsql
   :advice

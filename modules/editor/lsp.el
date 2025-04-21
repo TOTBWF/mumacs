@@ -16,7 +16,7 @@
   :straight nil
   :commands eglot
   :hook
-  (eglot . company-mode))
+  (eglot-hook . company-mode))
 
 (use-package flycheck-eglot
   ;; Disable for now

@@ -15,7 +15,7 @@
   :hook
   ;; FIXME: should be smarter about deferring this. However, benchmarking
   ;; shows that this is negligible.
-  (after-init . yas-global-mode)
+  (after-init-hook . yas-global-mode)
   :config
   (defconst meow-yas-keymap
     (define-keymap
@@ -27,7 +27,7 @@
 (use-package autoinsert
   ;; Easier to just always demand this, and it's fast.
   :demand t
-  :hook (find-file . auto-insert)
+  :hook (find-file-hook . auto-insert)
   :custom
   (auto-insert-query nil)
   (auto-insert-alist nil)

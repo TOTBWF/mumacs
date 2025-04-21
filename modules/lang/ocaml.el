@@ -5,45 +5,38 @@
 ;;; Code:
 (require 'editor/company)
 
-(defun ocaml-switch-interface ()
-  "Switch between an interface file, and it's implementation."
-  (interactive)
-  (let* ((fname (buffer-file-name))
-	 (ext (pcase (file-name-extension fname)
-		("ml" "mli")
-		("mli" "ml")
-		(_ (error "Cannot find interface file for %s" fname)))))
-    (find-file (concat (file-name-sans-extension fname) "." ext))))
-
 (use-package tuareg
-  :mode ("\\.ml'" "\\.mli'" "\\.opam'")
-  :bind
-  (:map tuareg-mode-map ("C-c C-s" . ocaml-switch-interface)))
+  :mode ("\\.ml'" "\\.mli'" "\\.opam'"))
 
 (use-package merlin
   :after tuareg
-  :hook (tuareg-mode . merlin-mode))
+  :hook (tuareg-mode-hook . merlin-mode))
 
 (use-package merlin-company
   :after merlin
-  :hook
-  (tuareg-mode . company-mode)
   :company
   (tuareg-mode . merlin-company-backend))
 
 (use-package merlin-eldoc
   :after merlin
   :hook
-  (tuareg-mode . merlin-eldoc-setup))
+  (tuareg-mode-hook . merlin-eldoc-setup))
 
 (use-package merlin-iedit
   :after merlin
   :bind
   (:map merlin-mode-map
-	("C-;" . merlin-iedit-occurances)))
+	("C-;" . merlin-iedit-occurrences)))
+
+(use-package utop
+  :hook
+  (tuareg-mode-hhok . utop-minor-mode)
+  :custom
+  (utop-command "opam exec -- dune utop . -- -emacs"))
 
 (use-package ocp-indent
   :after tuareg
+  :demand t
   :functions ocp-indent-region
   :config
   ;; ocp-indent-buffer is broken...
@@ -53,10 +46,14 @@
 
 (use-package opam-switch-mode
   :after tuareg
-  :hook (tuareg-mode . opam-switch-mode)
+  :hook
+  (tuareg-mode-hook . opam-switch-mode)
   :bind
   (:map opam-switch-mode-map
 	("C-c C-w" ("set switch" . opam-switch-set-switch))))
+
+(use-package dune
+  :mode ("dune-project'" "dune'"))
 
 (provide 'lang/ocaml)
 ;;; ocaml.el ends here

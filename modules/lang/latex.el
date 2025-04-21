@@ -68,27 +68,24 @@
 	    font-latex-sedate-face
 	    font-latex-math-face))
     (spell-fu-mode 1))
-  :hook (LaTeX-mode . spell-fu-LaTeX-hook))
+  :hook (LaTeX-mode-hook . spell-fu-LaTeX-hook))
 
 (use-package reftex
   :straight nil
-  :hook (LaTeX-mode . turn-on-reftex))
+  :hook (LaTeX-mode-hook . turn-on-reftex))
 
 (use-package company-reftex
   :company
-  (LaTeX-mode . company-reftex-citations))
+  (LaTeX-mode-hook . company-reftex-citations))
 
 (use-package company-auctex
-  :hook
-  (LaTeX-mode . company-mode)
   :company
-  (LaTeX-mode . company-auctex-labels)
-  (LaTeX-mode . (company-autex-macros company-auctex-symbols company-auctex-environments)))
+  (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
   :hook
-  (LaTeX-mode . turn-on-cdlatex)
-  (latex-mode . turn-on-cdlatex)
+  (LaTeX-mode-hook . turn-on-cdlatex)
+  (latex-mode-hook . turn-on-cdlatex)
   :custom
   (cdlatex-sub-super-scripts-outside-math-mode nil)
   (cdlatex-takeover-dollar nil)
@@ -107,9 +104,15 @@
   :commands math-delimiters-insert)
 
 (use-package xenops
+  :preface
+  (defun xenops--dont-use-drag-and-drop ()
+    "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
+    (setq mouse-drag-and-drop-region nil))
   :commands
   xenops-mode
   xenops-dwim
+  :advice
+  (xenops-math-activate :after xenops--dont-use-drag-and-drop)
   :config
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
@@ -119,8 +122,8 @@
 (use-package tex-parens
   :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
   :hook
-  (LaTeX-mode . tex-parens-mode)
-  (latex-mode . tex-parens-mode)
+  (LaTeX-mode-hook . tex-parens-mode)
+  (latex-mode-hook . tex-parens-mode)
   :bind
   (:map meow-latex-map
 	("(" . tex-parens-backward-sexp)
@@ -132,6 +135,7 @@
 (require 'xwidget)
 
 (defun xwidget-webkit-browse-tex ()
+  "Open the PDF associated to TeX file in the current buffer in a webkit xwidget."
   (interactive)
   (xwidget-webkit-browse-url (f-swap-ext (format "file://%s" (buffer-file-name)) "pdf")))
 

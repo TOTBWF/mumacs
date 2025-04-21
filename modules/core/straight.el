@@ -52,7 +52,7 @@ See Info node `(use-package)Creating an extension'."
 	(cond
 	 ((and (symbolp sym) (assq how advice--how-alist) (use-package-recognize-function fn))
 	  (setq args* (nconc args* (list (list sym how fn props)))) (setq arg (cdr arg)))
-	 (t (use-package-error (concat (symbol-name keyword) " wants arguments acceptable to `add-advice'," " or a list of such values"))))))
+	 (t (use-package-error (concat (symbol-name keyword) " wants arguments acceptable to `advice-add'," " or a list of such values"))))))
     args*))
 
 (defun use-package-autoloads-advice (_name _keyword args)
@@ -82,6 +82,9 @@ See Info node `(use-package)Creating an extension'."
 ;; This makes it easier to track down deferal mistakes; if we need to
 ;; `:demand', then we should call it out!
 (setopt use-package-always-defer t)
+
+;; Don't add `-hook' implicitly to hook names inside of a `:hook' block.
+(setopt use-package-hook-name-suffix nil)
 
 ;; We want to load this relatively early so that we can restart emacs nicely
 ;; even if we make a mistake in our config.

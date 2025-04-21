@@ -3,7 +3,6 @@
 ;;; Commentary:
 (require 'lsp-mode)
 
-(add-to-path "~/.cabal/bin")
 
 ;;; Code:
 (define-derived-mode rzk-mode prog-mode "Rzk"
