@@ -60,6 +60,21 @@
 ;; I'm fine with narrowing being enabled.
 (put 'narrow-to-region 'disabled nil)
 
+;; By default, emacs can only read 4k chunks from a process.
+;; This causes most processes to run signifigantly slower when
+;; run from emacs, as they spend most of their time waiting for
+;; emacs to read input!
+(setq read-process-output-max (* 64 1024 1024))
+
+;; Don't run through the `auto-mode-alist' twice when trying
+;; to determine the mode.
+(setq auto-mode-case-fold nil)
+
+;; Disable bidirectional text scanning and the bidirectional parentheses algorithm.
+;; This gives a modest performance increase.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
 
 (provide 'core/tweaks)
 ;;; tweaks.el ends here
