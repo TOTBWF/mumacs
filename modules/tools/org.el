@@ -52,8 +52,8 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :diminish
   org-cdlatex-mode
   :hook
-  (org-mode . org-cdlatex-mode)
-  (org-mode . org-mode-add-hooks)
+  (org-mode-hook . org-cdlatex-mode)
+  (org-mode-hook . org-mode-add-hooks)
   :custom-face
   (org-block ((t (:background nil))))
   :custom
@@ -153,46 +153,46 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
      (search . "  ")))
   (org-agenda-custom-commands
    '(("n" "Agenda and all tasks"
-      ((agenda ""
-               ((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))
-                ))
-       (tags-todo "+task+todo={TODO\\|OPEN}-blocked={t}-borceux"
-                  ((org-agenda-sorting-strategy
-                    '(priority-down todo-state-down))
-                   (org-agenda-overriding-header
-                    "Active tasks")))
-       (tags-todo "+task+todo={TODO\\|OPEN}+blocked={t}-borceux"
-                  ((org-agenda-sorting-strategy
-                    '(priority-down todo-state-down))
-                   (org-agenda-overriding-header
-                    "Blocked tasks")))
-       (tags-todo "+task+todo={WAIT}-borceux"
-                  ((org-agenda-overriding-header
-                    "Blockers")))))
+      ((agenda
+	""
+	((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
+       (tags-todo
+	"+todo={TODO\\|OPEN}-blocked={t}-borceux"
+	((org-agenda-overriding-header "Active tasks")))
+       (tags-todo
+	"+task+todo={TODO\\|OPEN}+blocked={t}-borceux"
+        ((org-agenda-overriding-header "Blocked tasks")))
+       (tags-todo
+	"+task+todo={WAIT}-borceux"
+        ((org-agenda-overriding-header "Blockers"))))
+      ((org-agenda-files (org-roam-ql-nodes-files '(or (tags "task") (tags "event") (tags "daily"))))
+       (org-agenda-sorting-strategy
+        '(priority-down todo-state-down))))
      ("b" "Borceux"
-      ((tags-todo "+borceux+example+todo={TODO\\|OPEN}"
-                  ((org-agenda-overriding-header "Examples")
-                   (org-agenda-hide-tags-regexp "example")
-                   (org-agenda-show-inherited-tags nil)))
-       (tags-todo "+borceux+definition+todo={TODO\\|OPEN}"
-                  ((org-agenda-overriding-header "Definitions")
-                   (org-agenda-hide-tags-regexp "definition")
-                   (org-agenda-show-inherited-tags nil)))
-       (tags-todo "+borceux+proposition+todo={TODO\\|OPEN}"
-                  ((org-agenda-overriding-header "Propositions")
-                   (org-agenda-hide-tags-regexp "proposition")
-                   (org-agenda-show-inherited-tags nil)))
-       (tags-todo "+borceux+exercise+todo={TODO\\|OPEN}"
-                  ((org-agenda-overriding-header "Exercises")
-                   (org-agenda-hide-tags-regexp "exercise")
-                   (org-agenda-show-inherited-tags nil)))))))
+      ((tags-todo
+	"+example+todo={TODO\\|OPEN}"
+        ((org-agenda-overriding-header "Examples")
+         (org-agenda-hide-tags-regexp "example")))
+       (tags-todo
+	"+definition+todo={TODO\\|OPEN}"
+        ((org-agenda-overriding-header "Definitions")
+         (org-agenda-hide-tags-regexp "definition")))
+       (tags-todo
+	"+proposition+todo={TODO\\|OPEN}"
+        ((org-agenda-overriding-header "Propositions")
+         (org-agenda-hide-tags-regexp "proposition")))
+       (tags-todo
+	"+exercise+todo={TODO\\|OPEN}"
+        ((org-agenda-overriding-header "Exercises")
+         (org-agenda-hide-tags-regexp "exercise"))))
+      ((org-agenda-show-inherited-tags nil))
+      (org-roam-ql-nodes-files '(tags "borceux")))))
   :config
   (defun org-agend-skip-entry-if-blocked-or-done ()
     "Skip all `org-agenda' entries that are either blocked or marked done."
     (and (or (org-entry-blocked-p)
              (org-entry-is-done-p))
          (org-entry-end-position))))
-
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
@@ -224,7 +224,8 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
 (use-package zotxt
   :diminish
   org-zotxt-mode
-  :hook (org-mode . org-zotxt-mode))
+  :hook
+  (org-mode-hook . org-zotxt-mode))
 
 (use-package org-roam
   :after org
@@ -255,9 +256,6 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   (defun org-roam-get-template (file)
     "Construct the path to the template FILE."
     (f-join user-emacs-directory "templates" file))
-  :config
-  ;; Keep the `org-roam' session synchronized.
-  (org-roam-db-autosync-mode 1)
   :custom
   ;; Make sure that `org-roam' uses the same directory as `logseq'.
   (org-roam-directory "~/Documents/Notes")
@@ -265,9 +263,10 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   (org-roam-dailies-directory "journals/")
   (org-roam-file-exclude-regexp '("data/" "logseq/bak/"))
   (org-roam-dailies-capture-templates
-   '(("d" "default" plain
+   `(("d" "default" plain
       (file ,(org-roam-get-template "daily.org"))
-      :target (file "%<%Y-%m-%d>.org"))))
+      :target (file "%<%Y-%m-%d>.org")
+      :unnarrowed t)))
   (org-roam-capture-templates
    `(("n" "note" plain
       (file ,(org-roam-get-template "note.org"))
@@ -285,11 +284,17 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
       (file ,(org-roam-get-template "event.org"))
       :target (file "events/%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)
+     ("d" "default" plain
+      (file ,(org-roam-get-template "daily.org"))
+      :target (file "%<%Y-%m-%d>.org")
+      :unnarrowed t)
      ("p" "person" plain
       (file ,(org-roam-get-template "person.org"))
       :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
       :unnarrowed t)))
-  (org-agenda-files '("~/Documents/Notes/tasks" "~/Documents/Notes/events"))
+  :config
+  ;; Keep the `org-roam' session synchronized.
+  (org-roam-db-autosync-mode 1)
   :bind
   (:map org-mode-map
         ("C-c C-q" . org-roam-tag-add))
@@ -310,7 +315,7 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :after org
   :diminish org-fancy-priorities-mode
   :hook
-  (org-mode . org-fancy-priorities-mode)
+  (org-mode-hook . org-fancy-priorities-mode)
   :custom
   (org-highest-priority ?A)
   (org-default-priority ?B)
@@ -321,33 +326,40 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
      (?C . "☕")
      (?D . "🧊"))))
 
-(use-package org-ql
-  :after org
-  :custom
-  (org-ql-views
-   '(("Notes: Empty Notes"
-      :buffers-files org-roam-list-files
-      :query
-      (and (empty-entry) (tags "note") (level 1))
-      :title "Empty Notes")
-     ("Notes: Untagged Notes"
-      :buffers-files org-roam-list-files
-      :query
-      (and (untagged "note") (level 1))
-      :title "Untagged Notes")))
-  :config
-  (org-ql-defpred empty-entry ()
-    "Return non-nil if the current entry contains no text beyond the headline."
-    :body
-    (save-excursion
-      (save-match-data
-        (forward-line)
-        (not (re-search-forward "[^[:space:]]" (save-excursion (org-entry-end-position)) t 1)))))
+;; (use-package org-ql
+;;   :after org
+;;   :custom
+;;   (org-ql-views
+;;    '(("Notes: Empty Notes"
+;;       :buffers-files org-roam-list-files
+;;       :query
+;;       (and (empty-entry) (tags "note") (level 1))
+;;       :title "Empty Notes")
+;;      ("Notes: Untagged Notes"
+;;       :buffers-files org-roam-list-files
+;;       :query
+;;       (and (untagged "note") (level 1))
+;;       :title "Untagged Notes")))
+;;   :config
+;;   (org-ql-defpred empty-entry ()
+;;     "Return non-nil if the current entry contains no text beyond the headline."
+;;     :body
+;;     (save-excursion
+;;       (save-match-data
+;;         (forward-line)
+;;         (not (re-search-forward "[^[:space:]]" (save-excursion (org-entry-end-position)) t 1)))))
 
-  (org-ql-defpred untagged (&rest tags)
-    "Return non-nil if the tags of the current entry are a subset of a list of tags."
-    :body
-    (cl-subsetp (org-get-tags) tags)))
+;;   (org-ql-defpred untagged (&rest tags)
+;;     "Return non-nil if the tags of the current entry are a subset of a list of tags."
+;;     :body
+;;     (cl-subsetp (org-get-tags) tags)))
+
+(use-package org-roam-ql
+  :after org org-roam
+  :autoload
+  org-roam-ql-agenda-block
+  org-roam-ql-nodes-files
+  org-roam-ql-defpred)
 
 ;; TOO SLOW
 ;; (use-package org-upcoming-modeline
