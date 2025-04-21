@@ -1,24 +1,31 @@
 ;;; core/path ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; `exec-path-from-shell' is somewhat cursed, so we roll our own solution.
-;; Instead of trying to gather our path from the shell, we explicitly
-;; set the `PATH' variable inside of Emacs via `add-to-path'.
+;; I know that `exec-path-from-shell' is quite cursed, but unfortunately
+;; seems to be the most reliable way to correctly populate the `process-environment'
+;; with the correct values when not launched from a shell.  In the future, I could
+;; look at caching some of these values, but this works for now.
 
 ;;; Code:
 
-(defun add-to-path (path)
-  "Add PATH to the variable `exec-path' and update $PATH.
-This is used in place of `exec-path-from-shell' to avoid having
-to start up a shell process, and is also more consistent."
-  (let ((expanded-path (expand-file-name path)))
-    (add-to-list 'exec-path expanded-path)
-    (setenv "PATH" (concat expanded-path ":" (getenv "PATH")))))
-
-(add-to-path "/usr/bin")
-(add-to-path "/usr/local/bin")
-(add-to-path "/run/current-system/sw/bin")
-(add-to-path "~/.local/bin")
+(use-package exec-path-from-shell
+  :hook
+  (after-init-hook . exec-path-from-shell-initialize)
+  :custom
+  ;; If we want `compile' to play nicely with `envrc-mode', then
+  ;; we need to make sure to grab a bunch of extra shell variables.
+  ;; See https://github.com/purcell/envrc/issues/92.
+  (exec-path-from-shell-variables
+   '("SSH_AUTH_SOCK"
+     "SSH_AGENT_PID"
+     "XDG_DATA_DIRS"
+     "XDG_CONFIG_DIRS"
+     "NIX_USER_PROFILE_DIR"
+     "NIX_SSL_CERT_FILE"
+     "NIX_PROFILES"
+     "NIX_PATH"
+     "PATH"
+     "MANPATH")))
 
 (provide 'core/path)
 ;;; path.el ends here
