@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: vertical-hom
+# key: !vhom
+# --
+\\DHom[\Cat{$1}]{\id}{$3}{$4}

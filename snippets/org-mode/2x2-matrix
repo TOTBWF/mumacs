@@ -1,0 +1,8 @@
+# key: !22m
+# name: 2x2-matrix
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+\begin{pmatrix}
+$1 & $2 \\\\
+$3 & $4 \\\\
+\end{pmatrix}

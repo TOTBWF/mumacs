@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: displayed-hom
+# key: !dhom
+# --
+\\DHom[\Cat{$1}]{$2}{$3}{$4}

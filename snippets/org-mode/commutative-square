@@ -1,0 +1,14 @@
+# key: !tikzsq
+# name: commutative-square
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+\\[
+\\begin{tikzcd}
+  {$1} & {$2} \\\\
+  {$3} & {$4} \\\\
+  \\arrow["{$5}", from=1-1, to=1-2]
+  \\arrow["{$6}"', from=1-1, to=2-1]
+  \\arrow["{$7}", from=1-2, to=2-2]
+  \\arrow["{$8}"', from=2-1, to=2-2]
+\\end{tikzcd}
+\\]

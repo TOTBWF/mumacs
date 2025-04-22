@@ -1,0 +1,4 @@
+#+title: %<%Y-%m-%d>
+#+filetags: :daily:
+
+* %<%Y-%m-%d>

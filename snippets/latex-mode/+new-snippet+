@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: infer-rule
+# key: infer
+# --
+\inferrule*{%
+  $1 \\\\
+}{%
+  $2
+}

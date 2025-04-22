@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: cat-c
+# key: cc
+# --
+\Cat{C}

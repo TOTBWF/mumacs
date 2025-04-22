@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: hom
+# key: !hom
+# --
+\\Hom[\\Cat{$1}]{$2}{$3}
