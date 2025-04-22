@@ -32,19 +32,6 @@
   :after magit
   :demand t)
 
-(use-package code-review
-  :straight
-  (code-review
-   :fork "phelrine/code-review"
-   :branch "fix/closql-update")
-  :after magit forge
-  :demand t
-  :bind
-  (:map code-review-mode-map
-	("RET" . magit-diff-visit-file-other-window)
-	("C-j" . code-review-comment-jump-next)
-	("C-k" . code-review-comment-jump-previous)))
-
 (use-package orgit
   :after magit org
   :demand t)
