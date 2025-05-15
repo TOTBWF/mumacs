@@ -11,7 +11,10 @@
   :commands vertico-mode
   :demand t
   :init
-  (vertico-mode))
+  (vertico-mode)
+  :bind
+  (:map vertico-map
+	("C-<backspace>" . vertico-directory-up)))
 
 (use-package vertico-prescient
   :after vertico
