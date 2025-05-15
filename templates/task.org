@@ -3,5 +3,5 @@
 
 * TODO [#B] ${title}
 :PROPERTIES:
-:BLOCKER:  children ()
+:BLOCKER:  children()
 :END:
