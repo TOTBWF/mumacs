@@ -36,10 +36,18 @@
   '("w" . outline-move-subtree-up)
   '("s" . outline-move-subtree-down))
 
-(use-package auctex
+(use-package latex
+  :straight auctex
   :hook
-  (LaTeX-mode . turn-on-meow-latex)
-  (LaTeX-mode . outline-minor-mode)
+  (LaTeX-mode-hook . turn-on-meow-latex)
+  (LaTeX-mode-hook . outline-minor-mode)
+  :spell-fu
+  (LaTeX-mode-hook
+   :exclude
+   font-lock-constant-face
+   font-lock-function-name-face
+   font-latex-sedate-face
+   font-latex-math-face)
   :custom
   (font-latex-user-keyword-classes
    '(("citations" (("cite" "{") ("citep" "{") ("citet" "{")) font-lock-constant-face command)))
@@ -47,7 +55,8 @@
    '("code" "verbatim" "verbatim*" "filecontents" "filecontents*"))
   :bind
   (:map LaTeX-mode-map
-	("$" . math-delimiters-insert))
+	("$" . math-delimiters-insert)
+	)
   (:map meow-latex-map
 	("S" . LaTeX-section)))
 
@@ -57,18 +66,6 @@
   (:map latex-mode-map
 	("$" . math-delimiters-insert)))
 
-;; Set up `spell-fu', and exclude some faces from spellchecking.
-(use-package spell-fu
-  :preface
-  (require 'spell-fu)
-  (defun spell-fu-LaTeX-hook ()
-    (setq spell-fu-faces-exclude
-	  '(font-lock-constant-face
-	    font-lock-function-name-face
-	    font-latex-sedate-face
-	    font-latex-math-face))
-    (spell-fu-mode 1))
-  :hook (LaTeX-mode-hook . spell-fu-LaTeX-hook))
 
 (use-package reftex
   :straight nil
@@ -108,6 +105,8 @@
   (defun xenops--dont-use-drag-and-drop ()
     "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
     (setq mouse-drag-and-drop-region nil))
+  :hook
+  (LaTeX-mode-hook . xenops-mode)
   :commands
   xenops-mode
   xenops-dwim
@@ -117,7 +116,10 @@
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
   ;; To work around this, we need to apply this customization after the package loads.
-  (setq xenops-math-image-scale-factor 1.65))
+  (setq xenops-math-image-scale-factor 1.65)
+  :bind
+  (:map LaTeX-mode-map
+	("C-c C-x C-l" . xenops-dwim)))
 
 (use-package tex-parens
   :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?

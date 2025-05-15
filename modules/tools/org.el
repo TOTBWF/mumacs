@@ -54,6 +54,8 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :hook
   (org-mode-hook . org-cdlatex-mode)
   (org-mode-hook . org-mode-add-hooks)
+  :spell-fu
+  (org-mode-hook :exclude org-meta-line org-link org-code)
   :custom-face
   (org-block ((t (:background nil))))
   :custom
