@@ -220,7 +220,27 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :demand t
   :commands org-edna-mode
   :config
-  (org-edna-mode))
+  (org-edna-mode)
+
+  (defun org-edna-finder/nodes (&rest ids)
+    "Find a list of org-roam nodes with given IDS.
+
+Edna Syntax: roam-ids(ID1 ID2 ...)
+
+Each ID is a UUID as understood by `org-roam-node-from-id'.
+
+Note that in the edna syntax, the IDs don't need to be quoted."
+    (mapcar
+     (lambda (id)
+       (let* ((node (org-roam-node-from-id id))
+		  (file (org-roam-node-file node))
+		  (buffer (find-file-noselect file)))
+	     (save-window-excursion
+	       (set-buffer buffer)
+	       (org-next-visible-heading 1)
+	       (point-marker))))
+     ids))
+  )
 
 ;; Zotero link integration
 (use-package zotxt
@@ -236,6 +256,9 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   org-roam-db-autosync-mode
   org-roam-node-find
   org-roam-db-query
+  ;; We need these for `org-edna-finder/nodes'.
+  org-roam-node-marker
+  org-roam-node-from-id
   :preface
   (defun org-roam-node-note-p (node)
     "Return `nil' if a node is a node, and `t' otherwise"
