@@ -24,6 +24,7 @@
 (require 'editor/flycheck)
 (require 'editor/spelling)
 ;; (require 'editor/lsp)
+(require 'editor/iedit)
 (require 'editor/imenu)
 (require 'editor/winner)
 (require 'editor/project)
