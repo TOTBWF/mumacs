@@ -9,6 +9,7 @@
 
 ;; Core editor functionality.
 (require 'core/straight)
+(require 'core/basics)
 (require 'core/path)
 (require 'core/custom)
 (require 'core/tweaks)
