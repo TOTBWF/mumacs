@@ -29,7 +29,7 @@
   :after meow
   :demand t
   :preface
-  ;; All of our elisp files are source controlled thanks to `straight',
+  ;; All of our elisp files are source controlled thanks to `elpaca',
   ;; so we need to set this to be able to easily navigate to them inside
   ;; of help buffers.
   (setq vc-follow-symlinks t)

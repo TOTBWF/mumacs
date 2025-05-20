@@ -13,7 +13,7 @@
 (defun find-package-module ()
   "Open a third-party Emacs module."
   (interactive)
-  (let ((default-directory (f-join user-emacs-directory "straight/repos/")))
+  (let ((default-directory (f-join user-emacs-directory "elpaca/repos/")))
     (call-interactively 'find-file)))
 
 (defun open-init-file ()

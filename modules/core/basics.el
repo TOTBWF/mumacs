@@ -1,4 +1,4 @@
-;;; core/basics --- Boostrapping code for straight.el  -*- lexical-binding: t; -*-
+;;; core/basics --- Boostrapping code  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
