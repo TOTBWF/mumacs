@@ -8,20 +8,17 @@
 
 (use-package vertico
   :ensure t
-  ;; :ensure (:files (:defaults "extensions/*"))
   :commands vertico-mode
-  :init
-  (vertico-mode)
+  :hook
+  (elpaca-after-init-hook . vertico-mode)
   :bind
   (:map vertico-map
 	("C-<backspace>" . vertico-directory-up)))
 
 (use-package vertico-prescient
   :ensure t
-  :after vertico
-  :functions vertico-prescient-mode
-  :config
-  (vertico-prescient-mode 1))
+  :hook
+  (vertico-mode-hook . vertico-prescient-mode))
 
 ;; `consult' provides a bunch of `completing-read' functions for
 ;; various search operations.
