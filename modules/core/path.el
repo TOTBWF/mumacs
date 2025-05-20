@@ -9,8 +9,10 @@
 ;;; Code:
 
 (use-package exec-path-from-shell
-  :config
-  (after-init-hook . exec-path-from-shell-initialize)
+  :ensure t
+  :demand t
+  :hook
+  (elpaca-after-init-hook . exec-path-from-shell-initialize)
   :custom
   ;; If we want `compile' to play nicely with `envrc-mode', then
   ;; we need to make sure to grab a bunch of extra shell variables.
