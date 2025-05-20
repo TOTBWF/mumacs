@@ -18,15 +18,17 @@
             (setq gc-cons-threshold 1000000)
             (message "gc-cons-threshold restored to %S"
                      gc-cons-threshold)))
+
 ;; We need to remove the built-in `org-mode' from the `load-path' ASAP, before it is able
 ;; to litter autoloads all over the place that will cause us headaches.
 ;; Note that we can't use any slick functional programming here; we need to stick
 ;; to functions defined in `subr', as we are super early in the load process!
-
 (setq load-path
       (let (result)
 	(dolist (path load-path (nreverse result))
 	  (unless (string-match-p "org$" path)
 	    (push path result)))))
+
+(setq debug-on-error t)
 
 ;;; early-init.el ends here
