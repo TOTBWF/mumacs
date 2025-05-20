@@ -9,7 +9,7 @@
 ;;; Code:
 
 (use-package exec-path-from-shell
-  :hook
+  :config
   (after-init-hook . exec-path-from-shell-initialize)
   :custom
   ;; If we want `compile' to play nicely with `envrc-mode', then

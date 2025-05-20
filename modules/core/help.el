@@ -16,7 +16,7 @@
 
 (use-package man
   :commands man
-  :straight nil
+  :ensure nil
   :custom
   (manual-program "gman")
   :bind
@@ -25,6 +25,7 @@
 
 ;; `helpful' provides a nicer help menu.
 (use-package helpful
+  :ensure t
   :after meow
   :demand t
   :preface
@@ -52,13 +53,14 @@
 
 ;; Override some annoying keybindings in `Info-mode'.
 (use-package info
-  :straight nil
+  :ensure nil
   :bind
   (:map Info-mode-map
 	("l" . meow-right)
 	("h" . meow-left)))
 
 (use-package marginalia
+  :ensure t
   :commands marginalia-mode
   :init
   (marginalia-mode))
