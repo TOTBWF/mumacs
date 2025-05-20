@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-;; We use `straight.el' for package management, so we disable
+;; We use `elpaca.el' for package management, so we disable
 ;; `package.el' at startup to avoid loading packages twice.
 (setq package-enable-at-startup nil)
 
