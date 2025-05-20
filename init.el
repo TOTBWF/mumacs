@@ -8,7 +8,7 @@
 (setopt byte-compile-error-on-warn t)
 
 ;; Core editor functionality.
-(require 'core/straight)
+(require 'core/elpaca)
 (require 'core/basics)
 (require 'core/path)
 (require 'core/custom)
