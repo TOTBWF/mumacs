@@ -42,9 +42,9 @@
 (require 'lang/prog)
 
 (require 'tools/direnv)
+(require 'tools/org)
 (require 'tools/magit)
 (require 'tools/notmuch)
-(require 'tools/org)
 (require 'tools/ripgrep)
 (require 'tools/vterm)
 
