@@ -4,6 +4,7 @@
 
 ;;; Code:
 (use-package vterm
+  :ensure t
   :commands vterm)
 
 (provide 'tools/vterm)
