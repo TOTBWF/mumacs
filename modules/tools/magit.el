@@ -6,14 +6,17 @@
 
 ;;; Code:
 (require 'core/meow)
+(require 'tools/org)
 
-;; Set up a `git' menu for `meow'.
-(defconst meow-git-keymap (define-keymap))
+(progn
+  (defconst meow-git-keymap (define-keymap))
+  (with-eval-after-load 'meow
+    (meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap)))))
 
-(with-eval-after-load 'meow
-  (meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap))))
+(define-meow-leader-keymap meow-poop-keymap "p" "poop")
 
 (use-package magit
+  :ensure t
   :commands magit-status magit-dispatch magit-file-dispatch
   :custom
   ;; The default is `/usr/local/bin/git', which is a wrapper around the actual
@@ -31,18 +34,20 @@
 	("g" . magit-status)))
 
 (use-package forge
-  :after magit
-  :demand t)
+  :ensure t
+  :after magit)
 
 (use-package orgit
-  :after magit org
-  :demand t)
+  :ensure t
+  :after (magit org))
 
 (use-package orgit-forge
-  :after magit org forge
-  :demand t)
+  :ensure t
+  :after (forge magit org orgit))
 
 (use-package git-timemachine
+  :after (meow)
+  :ensure t
   :commands git-timemachine
   :bind
   (:map meow-git-keymap
