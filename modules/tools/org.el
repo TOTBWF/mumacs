@@ -1,7 +1,7 @@
 ;;; tools/org ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; We really want to use a version of `org-mode' provided via `straight',
+;; We really want to use a version of `org-mode' provided via `elpaca',
 ;; so we make sure to strip out all occurances of the built-in `org' from the
 ;; load path.  This will prevent any annoying mistakes when calling `require'
 ;; on org-related files.  However, this needs to be done *extremely* early
@@ -19,7 +19,7 @@
 (with-eval-after-load 'meow
   (meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap))))
 
-;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
+;; We ensure that `org' is handled via `elpaca' to make `org-roam' happy.
 (use-package org
   :ensure t
   ;; HACK: we demand org to get keybindings to work.
