@@ -12,7 +12,7 @@
   (ansi-color-for-compilation-mode t))
 
 (use-package compile
-  :straight nil
+  :ensure nil
   :preface
   (defun compilation-start--use-pipe (fn &rest args)
     "Advice to ensure that `compilation-start' uses a pipe rather than a pty

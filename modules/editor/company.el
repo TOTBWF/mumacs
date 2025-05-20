@@ -7,15 +7,14 @@
 ;; backends a bit easier.
 
 ;;; Code:
-(require 'core/straight)
-
 (use-package company
   ;; We could try to defer loading this, but our `:company' handler
   ;; makes this difficult. As such, we just `:demand' it: benchmarking
   ;; shows that this takes a minimal amount of time anyways.
+  :ensure t
   :demand t
-  :diminish company-mode
   :commands company-mode
+  :diminish company-mode
   :bind (:map company-mode-map
 	      ("C-<tab>" . company-other-backend)))
 

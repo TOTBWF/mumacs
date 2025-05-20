@@ -10,8 +10,9 @@
 (defconst meow-spelling-keymap (make-sparse-keymap)
   "Keymap for spelling-related keybindings.")
 
-(keymap-global-set "C-#" meow-spelling-keymap)
-(add-to-list 'meow-keypad-start-keys '(?# . ?#))
+(with-eval-after-load 'meow
+  (keymap-global-set "C-#" meow-spelling-keymap)
+  (add-to-list 'meow-keypad-start-keys '(?# . ?#)))
 
 (use-package spell-fu
   :functions
@@ -75,7 +76,7 @@ See Info node `(use-package)Creating an extension'."
 (push :spell-fu (nthcdr (use-package-keyword-index :hook) use-package-keywords))
 
 (use-package ispell
-  :straight nil
+  :ensure nil
   :bind
   (:map meow-spelling-keymap
 	("s" . ispell-word)))

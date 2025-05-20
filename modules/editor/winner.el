@@ -5,7 +5,7 @@
 ;;; Code:
 
 (use-package winner
-  :straight nil
+  :ensure nil
   :demand t
   :hook
   (after-init-hook . winner-mode))
