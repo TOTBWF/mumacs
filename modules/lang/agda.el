@@ -14,6 +14,8 @@
   :straight nil
   :load-path "~/.agda/share/2.8.0/emacs-mode/"
   :mode ("\\.lagda\\.md\\'" . agda2-mode)
+  :spell-fu
+  (agda2-mode-hook :include default)
   :custom
   ;; HACK: Agda broke itself again :)
   (agda2-program-name "/nix/store/l1nbh4rz28xfrvrpj3nnq44in6s4hxfp-ghc-9.4.6-with-packages/bin/agda"))
