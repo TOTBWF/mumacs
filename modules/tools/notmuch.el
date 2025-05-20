@@ -64,6 +64,7 @@
 (require 'imap)
 
 (defun imap-idle-filter (on-notify proc string)
+  ; checkdoc-params: (on-notify proc string)
   "IMAP IDLE process filter."
   (when (buffer-name (process-buffer proc))
     (with-current-buffer (process-buffer proc)
