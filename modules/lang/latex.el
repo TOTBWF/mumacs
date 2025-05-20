@@ -77,13 +77,13 @@
 (use-package company-reftex
   :ensure t
   :after (reftex company)
-  :company
+  :hook
   (LaTeX-mode-hook . company-reftex-citations))
 
 (use-package company-auctex
   :ensure t
   :after (auctex company)
-  :company
+  :hook
   (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
