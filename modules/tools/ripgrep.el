@@ -17,8 +17,8 @@
   (:map project-prefix-map
 	("g" . rg-dwim)))
 
-(use-package wgrep
-  :demand t)
+(use-package wgrep)
+  ;; :demand t)
 
 (provide 'tools/ripgrep)
 ;;; ripgrep.el ends here

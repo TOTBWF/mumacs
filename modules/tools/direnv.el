@@ -4,7 +4,7 @@
 
 ;;; Code:
 (use-package envrc
-  :hook
+  :config
   (after-init-hook . envrc-global-mode))
 
 (provide 'tools/direnv)

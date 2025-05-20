@@ -4,7 +4,7 @@
 
 ;;; Code:
 (use-package proced
-  :straight nil
+  :elpaca nil
   :commands
   proced
   :custom
