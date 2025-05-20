@@ -3,41 +3,44 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'editor/spelling)
+(require 'core/meow)
 (require 'core/path)
+(require 'editor/spelling)
 (require 'outline)
 (require 'info)
 
 (defconst meow-latex-map (make-keymap))
 
-(meow-define-state latex
-  "Meow state for interacting with latex documents."
-  :lighter "[L]"
-  :keymap meow-latex-map)
+(with-eval-after-load 'meow
+  (meow-define-state latex
+    "Meow state for interacting with latex documents."
+    :lighter "[L]"
+    :keymap meow-latex-map)
 
-(setq meow-cursor-type-latex 'hollow)
+  (setq meow-cursor-type-latex 'hollow)
 
-;; HACK: This is really bad: I should be adding this as a per-mode binding that resides in the local map.
-(defun turn-on-meow-latex ()
-  "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'."
-  (meow-define-keys 'normal '("C" . meow-latex-mode)))
+  ;; HACK: This is really bad: I should be adding this as a per-mode binding that resides in the local map.
+  (defun turn-on-meow-latex ()
+    "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'."
+    (meow-define-keys 'normal '("C" . meow-latex-mode)))
 
-(meow-define-keys 'latex
-  '("<escape>" . meow-normal-mode)
-  '("C" . meow-normal-mode)
-  '("i" . meow-insert-mode)
-  '("u" . meow-undo)
-  '("SPC" . meow-keypad)
-  ;; Outline mode settings
-  '("<" . outline-promote)
-  '(">" . outline-demote)
-  '("p" . outline-previous-visible-heading)
-  '("n" . outline-next-visible-heading)
-  '("w" . outline-move-subtree-up)
-  '("s" . outline-move-subtree-down))
+  (meow-define-keys 'latex
+    '("<escape>" . meow-normal-mode)
+    '("C" . meow-normal-mode)
+    '("i" . meow-insert-mode)
+    '("u" . meow-undo)
+    '("SPC" . meow-keypad)
+    ;; Outline mode settings
+    '("<" . outline-promote)
+    '(">" . outline-demote)
+    '("p" . outline-previous-visible-heading)
+    '("n" . outline-next-visible-heading)
+    '("w" . outline-move-subtree-up)
+    '("s" . outline-move-subtree-down))
+  )
 
 (use-package latex
-  :straight auctex
+  :ensure auctex
   :hook
   (LaTeX-mode-hook . turn-on-meow-latex)
   (LaTeX-mode-hook . outline-minor-mode)
@@ -61,21 +64,25 @@
 	("S" . LaTeX-section)))
 
 (use-package tex-mode
-  :straight nil
+  :ensure nil
   :bind
   (:map latex-mode-map
 	("$" . math-delimiters-insert)))
 
 
 (use-package reftex
-  :straight nil
+  :ensure nil
   :hook (LaTeX-mode-hook . turn-on-reftex))
 
 (use-package company-reftex
+  :ensure t
+  :after (reftex company)
   :company
   (LaTeX-mode-hook . company-reftex-citations))
 
 (use-package company-auctex
+  :ensure t
+  :after (auctex company)
   :company
   (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
@@ -122,7 +129,7 @@
 	("C-c C-x C-l" . xenops-dwim)))
 
 (use-package tex-parens
-  :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
+  :ensure (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
   :hook
   (LaTeX-mode-hook . tex-parens-mode)
   (latex-mode-hook . tex-parens-mode)
@@ -133,7 +140,6 @@
 	("DEL" . tex-parens-delete-pair)))
 
 ;; This should probably live elsewhere.
-(require 'f)
 (require 'xwidget)
 
 (defun xwidget-webkit-browse-tex ()

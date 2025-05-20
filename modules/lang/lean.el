@@ -6,7 +6,7 @@
 
 (use-package lean4-mode
   :requires polymode markdown-mode
-  :straight (lean4-mode
+  :ensure (lean4-mode
 	     :type git
 	     :host github
 	     :repo "leanprover/lean4-mode"
