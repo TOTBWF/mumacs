@@ -21,6 +21,28 @@
   (interactive)
   (find-file (f-join user-emacs-directory "init.el")))
 
+;; [NOTE: Meow leader keymaps]
+;; By default, `meow' uses `mode-specific-map' as the leader keymap
+;; (EG: the keymap used for `C-c'). This means that if we try and add
+;; bindings like `SPC g g' for magit, and a mode then binds `C-c g', then
+;; our binding get clobbered. To avoid this, we are going to bind a new
+;; keymap called `meow-leader-keymap' that we are going to use for our leader.
+;;
+;; This needs to be done outside of the `use-package' statement for `meow'.
+;; Later on, we are going to add entries to this keymap via a
+;; combination of `with-eval-after-load' and `meow-define-keys'.
+;; If we don't declare the keymap outside the `use-package' form, then
+;; the `with-eval-after-load' will run *before* the `:config' block, which
+;; in turn will clobber all of our bindings!
+(defconst meow-leader-keymap (define-keymap))
+
+(defmacro define-meow-leader-keymap (name key description)
+  "Define a `meow' leader keymap with NAME bound to KEY with DESCRIPTION."
+  `(progn
+     (defconst ,name (define-keymap))
+     (with-eval-after-load 'meow
+       (meow-define-keys 'leader (cons ,key (cons ,description ,name))))))
+
 ;; Modal editing
 (use-package meow
   ;; No way we can defer loading this; we really do need keystrokes to work ASAP.
@@ -34,12 +56,8 @@
   :config
   (require 'meow)
 
-  ;; By default, `meow' uses `mode-specific-map' as the leader keymap.
-  ;; This leads to problematic situations when we try to set up a doom-like
-  ;; leader system, so we create a fresh keymap for the leader and use that instead.
-  (setq meow-leader-keymap (define-keymap))
+  ;; See [NOTE: Meow leader keymaps].
   (setf (alist-get 'leader meow-keymap-alist) meow-leader-keymap)
-
 
   ;; `meow' comes with a "keypad" system that is close to `god-mode',
   ;; where pressing a leader key (in our case, `SPC') allows you to
@@ -152,7 +170,6 @@
 ;; used for `meow-keymap'.
 (use-package which-key
   :ensure t
-  :after meow
   :diminish which-key-mode
   :demand t
   :config
