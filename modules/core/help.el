@@ -8,6 +8,9 @@
 
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
+  ;; TODO: Figure out where `iman' actually comes from: can check on
+  ;; Reed's machine. For now, disable it!
+  :disabled
   :commands iman
   :custom
   ;; MacOS man does not list all man pages when passed ''.
@@ -48,6 +51,7 @@
 
 ;; Demos of common elisp functions.
 (use-package elisp-demos
+  :ensure t
   :advice
   (helpful-update :after elisp-demos-advice-helpful-update))
 
