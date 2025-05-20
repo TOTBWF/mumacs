@@ -15,6 +15,7 @@
   (add-to-list 'meow-keypad-start-keys '(?# . ?#)))
 
 (use-package spell-fu
+  :ensure t
   :functions
   spell-fu-dictionary-add
   spell-fu-get-personal-dictionary
