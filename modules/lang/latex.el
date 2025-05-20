@@ -129,7 +129,7 @@
 	("C-c C-x C-l" . xenops-dwim)))
 
 (use-package tex-parens
-  :ensure (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
+  :ensure t
   :hook
   (LaTeX-mode-hook . tex-parens-mode)
   (latex-mode-hook . tex-parens-mode)
