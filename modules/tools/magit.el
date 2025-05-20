@@ -9,7 +9,9 @@
 
 ;; Set up a `git' menu for `meow'.
 (defconst meow-git-keymap (define-keymap))
-(meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap)))
+
+(with-eval-after-load 'meow
+  (meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap))))
 
 (use-package magit
   :commands magit-status magit-dispatch magit-file-dispatch

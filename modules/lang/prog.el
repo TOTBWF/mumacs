@@ -6,7 +6,7 @@
 ;;; Code:
 
 (use-package prog-mode
-  :straight nil
+  :ensure nil
   :preface
   (defun prog-mode-setup-display ()
     "Configure display settings for `prog-mode'."

@@ -1,42 +1,13 @@
-;;; core/straight --- Boostrapping code for straight.el  -*- lexical-binding: t; -*-
+;;; core/basics --- Boostrapping code  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
-;; Bootstrap `straight.el' and `use-package`, and configure some core
-;; features that should happen early in the boostrapping process.
+;; Configure some core features that should happen early in the boostrapping
+;; process.
 
 ;;; Code:
 
-;; Bootstrapping code for `straight.el'; taken from https://github.com/radian-software/straight.el.
-(defvar bootstrap-version)
-(defconst straight-use-package-by-default t)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(require 'straight)
-
-;; Load up `use-package', so we can declaratively manage packages.
-;; Note that we want to use HEAD for `use-package', as we want
-;; `which-key' integration in the `:bind' form.
-(straight-use-package
- '(use-package
-    :type git
-    :host github
-    :repo "jwiegley/use-package"))
-
-(require 'use-package)
+(require 'core/elpaca)
 
 (defun use-package-normalize-advice (_name keyword args)
   ; checkdoc-params: (keyword)
@@ -89,6 +60,7 @@ See Info node `(use-package)Creating an extension'."
 ;; We want to load this relatively early so that we can restart emacs nicely
 ;; even if we make a mistake in our config.
 (use-package restart-emacs
+  :ensure t
   :demand t)
 
 ;; `diminish' lets us easily hide active modes from the modeline.
@@ -96,6 +68,7 @@ See Info node `(use-package)Creating an extension'."
 ;; we use it absolutely everywhere, so we want it right
 ;; out the gate.
 (use-package diminish
+  :ensure t
   :demand t
   :functions diminish
   :config
@@ -107,7 +80,7 @@ See Info node `(use-package)Creating an extension'."
 ;; We also want to configure native compilation to use a decent optimization level.
 ;; See (info "(elisp) Native Compilation") for more details.
 (use-package comp
-  :straight nil
+  :ensure nil
   :demand t
   :if (native-comp-available-p)
   :custom
@@ -120,15 +93,18 @@ See Info node `(use-package)Creating an extension'."
 
 ;; `dash.el' provides a more consistent API for manipulating lists; see (info "(dash) Top") for docs.
 (use-package dash
+  :ensure t
   :demand t)
 
 ;; `f.el' provides a more consistent API for filepath manipulation.
 (use-package f
+  :ensure t
   :demand t)
 
 ;; `s.el' provides a more consistent API for string manipulation.
 (use-package s
+  :ensure t
   :demand t)
 
-(provide 'core/straight)
-;;; straight.el ends here
+(provide 'core/basics)
+;;; basics.el ends here

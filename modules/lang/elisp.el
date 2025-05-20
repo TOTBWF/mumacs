@@ -8,7 +8,8 @@
 (require 'editor/company)
 
 (use-package elisp-mode
-  :straight nil
+  :ensure nil
+  :after company
   :config
   ;; Auto-insert header and `provide' block when a file is created.
   (create-file-template ".*.el$" "emacs-lisp-template" 'emacs-lisp-mode)

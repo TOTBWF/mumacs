@@ -7,7 +7,7 @@
 ;;; Code:
 
 (use-package files
-  :straight nil
+  :ensure nil
   :demand t
   :preface
   (defconst backup-directory

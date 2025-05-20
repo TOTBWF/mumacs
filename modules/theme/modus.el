@@ -3,9 +3,9 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'core/straight)
 
 (use-package modus-themes
+  :ensure t
   :demand t
   :config
   (load-theme 'modus-vivendi t))

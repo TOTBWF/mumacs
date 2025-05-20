@@ -4,9 +4,9 @@
 
 ;;; Code:
 (require 'core/meow)
-(require 'core/straight)
 
 (use-package flycheck
+  :ensure t
   :commands flycheck-mode
   :diminish flycheck-mode
   :custom

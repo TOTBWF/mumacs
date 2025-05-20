@@ -7,10 +7,11 @@
 ;; automatically.
 
 ;;; Code:
-(require 'core/straight)
+(require 'core/elpaca)
 (require 'core/meow)
 
 (use-package yasnippet
+  :ensure t
   :diminish yas-minor-mode
   :hook
   ;; FIXME: should be smarter about deferring this. However, benchmarking

@@ -6,7 +6,7 @@
 (require 'core/meow)
 
 (use-package project
-  :straight nil
+  :ensure nil
   ;; Don't bother defering; gets quite fiddly with autoloading,
   ;; and benchmarking shows that this is fast to load.
   :demand t
@@ -22,12 +22,13 @@
     "Convert FILENAME to be relative to the root of a `project.el' PROJECT.  Defaults to `project-current'"
     (file-relative-name filename (project-root (or project (project-current))))))
 
+(elpaca transient) ;; Make sure we're using an up-to-date copy of transient?
 (use-package disproject
-  :straight
-  '(disproject
-    :type git
-    :host github
-    :repo "aurtzy/disproject")
+  :ensure
+    '(disproject
+      :type git
+      :host github
+      :repo "aurtzy/disproject")
   :demand t
   :config
   (meow-define-keys 'leader `("p" . ("project" . disproject-dispatch))))
