@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/elpaca)
 (require 'core/meow)
 
 (use-package project
@@ -25,10 +26,10 @@
 (elpaca transient) ;; Make sure we're using an up-to-date copy of transient?
 (use-package disproject
   :ensure
-    '(disproject
-      :type git
-      :host github
-      :repo "aurtzy/disproject")
+  (disproject
+    :type git
+    :host github
+    :repo "aurtzy/disproject")
   :demand t
   :config
   (meow-define-keys 'leader `("p" . ("project" . disproject-dispatch))))
