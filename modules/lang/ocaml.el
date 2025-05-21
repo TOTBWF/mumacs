@@ -36,7 +36,7 @@
 (use-package utop
   :ensure t
   :hook
-  (tuareg-mode-hhok . utop-minor-mode)
+  (tuareg-mode-hook . utop-minor-mode)
   :custom
   (utop-command "opam exec -- dune utop . -- -emacs"))
 
