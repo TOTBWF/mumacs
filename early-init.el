@@ -29,6 +29,12 @@
 	  (unless (string-match-p "org$" path)
 	    (push path result)))))
 
-(setq debug-on-error t)
+;; Add our modules to the load path.
+(add-to-list 'load-path (file-name-concat user-emacs-directory "modules"))
+
+;; We also make sure to set `custom-file' ASAP. This lets us control some
+;; parts of the load process early.
+(setq custom-file (file-name-concat user-emacs-directory "custom.el"))
+
 
 ;;; early-init.el ends here

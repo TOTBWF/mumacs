@@ -3,7 +3,11 @@
 ;;; Commentary:
 
 ;;; Code:
-(add-to-list 'load-path "~/.config/emacs/modules")
+
+;; Load the custom file first: this lets users perform
+;; customizaton of things like `source-directory' early
+;; on in the load process.
+(load custom-file)
 
 (setopt byte-compile-error-on-warn t)
 
@@ -11,7 +15,6 @@
 (require 'core/elpaca)
 (require 'core/basics)
 (require 'core/path)
-(require 'core/custom)
 (require 'core/tweaks)
 (require 'core/meow)
 (require 'core/help)
