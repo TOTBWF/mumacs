@@ -7,7 +7,7 @@
 (use-package imenu
   :ensure nil
   :bind
-  (:map meow-leader-keymap
+  (:map meow-leader-map
 	("i" . imenu)))
 
 (use-package imenu-list
