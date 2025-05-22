@@ -8,12 +8,8 @@
 (require 'core/meow)
 (require 'tools/org)
 
-(progn
-  (defconst meow-git-keymap (define-keymap))
-  (with-eval-after-load 'meow
-    (meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap)))))
-
-(define-meow-leader-keymap meow-poop-keymap "p" "poop")
+(define-leader meow-leader-git-map "g" "git"
+  "Leader keymap for git-related keybindings.")
 
 (use-package magit
   :ensure t
@@ -30,7 +26,7 @@
   :bind
   (:map magit-mode-map
 	("x" . magit-discard))
-  (:map meow-git-keymap
+  (:map meow-leader-git-map
 	("g" . magit-status)))
 
 (use-package forge
@@ -50,7 +46,7 @@
   :ensure t
   :commands git-timemachine
   :bind
-  (:map meow-git-keymap
+  (:map meow-leader-git-map
 	("t" . git-timemachine))
   ;; `git-timemachine' fights with `meow' over keybindings,
   ;; so we replace all the problematic bindings.

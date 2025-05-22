@@ -5,14 +5,8 @@
 ;;; Code:
 (require 'core/meow)
 
-;; Set up a keymap for spelling-related keybindings,
-;; place it at `C-#', and add it to the `meow' keypad.
-(defconst meow-spelling-keymap (make-sparse-keymap)
+(define-keypad meow-spelling-map ?#
   "Keymap for spelling-related keybindings.")
-
-(with-eval-after-load 'meow
-  (keymap-global-set "C-#" meow-spelling-keymap)
-  (add-to-list 'meow-keypad-start-keys '(?# . ?#)))
 
 (use-package spell-fu
   :ensure t
@@ -25,7 +19,7 @@
   :commands spell-fu-mode spell-fu-word-add
   :hook (spell-fu-mode-hook . spell-fu-setup-dictionaries)
   :bind
-  (:map meow-spelling-keymap
+  (:map meow-spelling-map
 	("a" . spell-fu-word-add)
 	("d" . spell-fu-mode)))
 
@@ -79,7 +73,7 @@ See Info node `(use-package)Creating an extension'."
 (use-package ispell
   :ensure nil
   :bind
-  (:map meow-spelling-keymap
+  (:map meow-spelling-map
 	("s" . ispell-word)))
 
 (provide 'editor/spelling)
