@@ -26,7 +26,7 @@
 ;; (EG: the keymap used for `C-c'). This means that if we try and add
 ;; bindings like `SPC g g' for magit, and a mode then binds `C-c g', then
 ;; our binding get clobbered. To avoid this, we are going to bind a new
-;; keymap called `meow-leader-keymap' that we are going to use for our leader.
+;; keymap called `meow-leader-map' that we are going to use for our leader.
 ;;
 ;; This needs to be done outside of the `use-package' statement for `meow'.
 ;; Later on, we are going to add entries to this keymap via a
@@ -34,14 +34,50 @@
 ;; If we don't declare the keymap outside the `use-package' form, then
 ;; the `with-eval-after-load' will run *before* the `:config' block, which
 ;; in turn will clobber all of our bindings!
-(defconst meow-leader-keymap (define-keymap))
+(defvar meow-leader-map (define-keymap)
+  "Keymap to use for the SPC leader key.
+This should be modified via `define-leader'.")
 
-(defmacro define-meow-leader-keymap (name key description)
-  "Define a `meow' leader keymap with NAME bound to KEY with DESCRIPTION."
+(defmacro define-leader (name key description &optional docstring)
+  "Define NAME as a leader keymap for `meow', and bind it to KEY in `meow-leader-map'.
+DESCRIPTION is a string used to describe the prefix.
+DOCSTRING is an optional docstring to use for the keymap."
+  (declare
+   (ftype (function (symbol string string &optional string) nil))
+   (doc-string 4)
+   (indent 3))
+  (cl-check-type name symbol)
+  (cl-check-type key key-valid-p)
+  (cl-check-type description string)
+  (cl-check-type docstring (or null string))
   `(progn
-     (defconst ,name (define-keymap))
+     ;; Use `defvar' over `defconst' so that re-evaluating the macro doesn't
+     ;; clobber our bindings.
+     (defvar ,name (make-sparse-keymap) ,docstring)
+     ;; We don't actually need to wait until `meow' loads: just insert
+     ;; into the keymap directly.
+     (define-key meow-leader-map (kbd ,key) (cons ,description ,name))))
+
+(defmacro define-keypad (name char &optional docstring)
+  "Define a new `meow' keypad entry with NAME for CHAR with an optional DOCSTRING."
+  (declare
+   (ftype (function (symbol character &optional string) nil))
+   (doc-string 3)
+   (indent 2))
+  (cl-check-type name symbol)
+  (cl-check-type char character)
+  (cl-check-type docstring (or null string))
+  `(progn
+     ;; Use `defvar' over `defconst' so that re-evaluating the macro doesn't
+     ;; clobber our bindings.
+     (defvar ,name (make-sparse-keymap))
+     ;; We can avoid a somewhat annoying call to `kbd' by just setting the
+     ;; `C-' event modifier directly.
+     (define-key (current-global-map) ,(vector (event-apply-modifier char 'control 26 "C-")) ,name)
+     ;; Have to wait until `meow' finishes loading before we add our map to the keypad
+     ;; translation layer.
      (with-eval-after-load 'meow
-       (meow-define-keys 'leader (cons ,key (cons ,description ,name))))))
+       (add-to-list 'meow-keypad-start-keys (quote ,(cons char char))))))
 
 ;; Modal editing
 (use-package meow
@@ -57,12 +93,12 @@
   (require 'meow)
 
   ;; See [NOTE: Meow leader keymaps].
-  (setf (alist-get 'leader meow-keymap-alist) meow-leader-keymap)
+  (setf (alist-get 'leader meow-keymap-alist) meow-leader-map)
 
   ;; `meow' comes with a "keypad" system that is close to `god-mode',
   ;; where pressing a leader key (in our case, `SPC') allows you to
   ;; chord keys without pressing modifiers.
-  (defconst meow-file-keymap
+  (defconst meow-file-map
     (define-keymap
       "r" '("open recent" . recentf-open)
       "f" '("find file" . find-file)
@@ -71,15 +107,15 @@
       "m" '("find emacs module" . find-emacs-module)
       "i" '("open init file" . open-init-file)))
 
-  (defconst meow-buffer-keymap
+  (defconst meow-buffer-map
     (define-keymap
       "b" '("find buffer" . switch-to-buffer)
       "d" '("kill buffer" . kill-current-buffer)
       "x" '("scratch buffer" . scratch-buffer)))
 
   (meow-define-keys 'leader
-    `("f" . ("file" . ,meow-file-keymap))
-    `("b" . ("buffer" . ,meow-buffer-keymap)))
+    `("f" . ("file" . ,meow-file-map))
+    `("b" . ("buffer" . ,meow-buffer-map)))
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
