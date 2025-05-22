@@ -13,6 +13,7 @@
 
 ;; Core editor functionality.
 (require 'core/elpaca)
+(require 'core/advice)
 (require 'core/basics)
 (require 'core/path)
 (require 'core/tweaks)
