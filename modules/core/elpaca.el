@@ -77,9 +77,22 @@ If DIR is non-nil, use that directory insteaad of `source-directory'."
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;; Install use-package support
+;; Set up `use-package' support for `elpaca'.
+;; There are a couple of options that must be set *before* `use-package' itself loads,
+;; so we set them before we submit the order to `elpaca' to ensure this.
+
+;; This is handy for debugging.
+(setopt use-package-compute-statistics t)
+
+;; This makes it easier to track down deferal mistakes; if we need to
+;; `:demand', then we should call it out!
+(setopt use-package-always-defer t)
+
+;; Don't add `-hook' implicitly to hook names inside of a `:hook' block.
+(setopt use-package-hook-name-suffix nil)
+
 (elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
+  ;; Enable `use-package' :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
 (provide 'core/elpaca)

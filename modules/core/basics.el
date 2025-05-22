@@ -10,16 +10,6 @@
 (require 'core/elpaca)
 
 
-;; This is handy for debugging.
-(setopt use-package-compute-statistics t)
-
-;; This makes it easier to track down deferal mistakes; if we need to
-;; `:demand', then we should call it out!
-(setopt use-package-always-defer t)
-
-;; Don't add `-hook' implicitly to hook names inside of a `:hook' block.
-(setopt use-package-hook-name-suffix nil)
-
 ;; We want to load this relatively early so that we can restart emacs nicely
 ;; even if we make a mistake in our config.
 (use-package restart-emacs
