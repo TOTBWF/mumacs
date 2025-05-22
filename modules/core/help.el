@@ -8,9 +8,7 @@
 
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
-  ;; TODO: Figure out where `iman' actually comes from: can check on
-  ;; Reed's machine. For now, disable it!
-  :disabled
+  :ensure (iman :host github :repo "emacsattic/iman")
   :commands iman
   :custom
   ;; MacOS man does not list all man pages when passed ''.
