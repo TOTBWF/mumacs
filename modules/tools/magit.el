@@ -38,8 +38,9 @@
   :after (magit org))
 
 (use-package orgit-forge
-  :ensure t
-  :after (forge magit org orgit))
+  :ensure
+  (orgit-forge
+   :remotes ("totbwf" :repo "totbwf/orgit-forge" :branch "fix-autoloads")))
 
 (use-package git-timemachine
   :after (meow)
