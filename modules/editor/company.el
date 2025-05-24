@@ -15,8 +15,9 @@
   :demand t
   :commands company-mode
   :diminish company-mode
-  :bind (:map company-mode-map
-	      ("C-<tab>" . company-other-backend)))
+  :bind
+  (:map company-mode-map
+	("C-<tab>" . company-other-backend)))
 
 ;;;###autoload
 (defun company-use-package--company-normalize (name keyword args)
