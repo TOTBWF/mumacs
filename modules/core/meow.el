@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/elpaca)
 
 (defun find-emacs-module ()
   "Open an Emacs configuration module."
@@ -47,7 +48,6 @@ DOCSTRING is an optional docstring to use for the keymap."
    (doc-string 4)
    (indent 3))
   (cl-check-type name symbol)
-  (cl-check-type key key-valid-p)
   (cl-check-type description string)
   (cl-check-type docstring (or null string))
   `(progn
