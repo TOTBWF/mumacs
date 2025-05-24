@@ -77,7 +77,10 @@ DOCSTRING is an optional docstring to use for the keymap."
      ;; Have to wait until `meow' finishes loading before we add our map to the keypad
      ;; translation layer.
      (with-eval-after-load 'meow
-       (add-to-list 'meow-keypad-start-keys (quote ,(cons char char))))))
+       (if (boundp 'meow-keypad-start-keys)
+	   (add-to-list 'meow-keypad-start-keys (quote ,(cons char char))))
+       (warn "define-keypad: `meow-keypad-start-keys' not bound."))))
+
 
 ;; Modal editing
 (use-package meow
