@@ -1,4 +1,4 @@
-;;; core/elpaca --- DESCRIPTION -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; core/elpaca --- Elpaca bootstrapping -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; This file includes the `elpaca' bootstrapping code, which
@@ -29,7 +29,9 @@ If DIR is non-nil, use that directory insteaad of `source-directory'."
 ;; Set `emacs-build-time' explicitly if it looks like we were built from source.
 ;; We can use `emacs-repository-version' to determine if Emacs was built from
 ;; a repository checkout.
-(when (and emacs-repository-version (not emacs-build-time))
+(when (and emacs-repository-version
+	 (not emacs-build-time)
+	 (not (bound-and-true-p byte-compile-current-file)))
   ;; If it looks like we were built from source, we can try to work
   ;; backwards from the git hash to determine a date.
   ;; Note that this requires the `source-directory' to be set
