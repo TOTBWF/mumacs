@@ -4,6 +4,7 @@
 
 ;;; Code:
 (use-package nix-mode
+  :ensure t
   :commands nix-mode)
 
 (provide 'lang/nix)

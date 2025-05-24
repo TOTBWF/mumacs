@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/elpaca)
 
 (use-package modus-themes
   :ensure t

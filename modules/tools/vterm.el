@@ -1,6 +1,7 @@
 ;;; tools/vterm ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+(require 'core/elpaca)
 
 ;;; Code:
 (use-package vterm

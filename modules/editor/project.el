@@ -20,10 +20,14 @@
 
   ;; Some useful helper functions.
   (defun project-make-relative-to-root (filename &optional project)
-    "Convert FILENAME to be relative to the root of a `project.el' PROJECT.  Defaults to `project-current'"
+    "Convert FILENAME to be relative to the root of a `project.el' PROJECT.
+Defaults to `project-current'."
     (file-relative-name filename (project-root (or project (project-current))))))
 
-(elpaca transient) ;; Make sure we're using an up-to-date copy of transient?
+;; HACK: This belongs elsewhere.
+;; Make sure that we have an up-to-date copy of transient.
+(elpaca transient)
+
 (use-package disproject
   :ensure
   (disproject

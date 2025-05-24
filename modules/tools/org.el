@@ -10,14 +10,12 @@
 ;;; Code:
 (require 'face-remap)
 
+(require 'core/elpaca)
 (require 'core/meow)
 (require 'lang/latex)
 
 ;; Set up a `org' menu for `meow'.
-(defconst meow-org-keymap (define-keymap))
-
-(with-eval-after-load 'meow
-  (meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap))))
+(define-leader meow-org-leader-map "o" "org")
 
 ;; We ensure that `org' is handled via `elpaca' to make `org-roam' happy.
 (use-package org
@@ -244,8 +242,7 @@ Note that in the edna syntax, the IDs don't need to be quoted."
 	       (set-buffer buffer)
 	       (org-next-visible-heading 1)
 	       (point-marker))))
-     ids))
-  )
+     ids)))
 
 ;; Zotero link integration
 (use-package zotxt
@@ -330,7 +327,7 @@ Note that in the edna syntax, the IDs don't need to be quoted."
   :bind
   (:map org-mode-map
         ("C-c C-q" . org-roam-tag-add))
-  (:map meow-org-keymap
+  (:map meow-org-leader-map
         ("a" . org-agenda)
         ("o" . org-roam-note-find)
         ("t" . org-roam-task-find)
