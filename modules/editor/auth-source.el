@@ -1,4 +1,4 @@
-;;; editor/auth-source ---  -*- lexical-binding: t; -*-
+;;; editor/auth-source.el ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -14,4 +14,4 @@
      "~/.authinfo.gpg")))
 
 (provide 'editor/auth-source)
-;;; auth-sources.el ends here
+;;; auth-source.el ends here
