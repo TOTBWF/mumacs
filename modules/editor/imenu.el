@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/meow)
 
 (use-package imenu
   :ensure nil

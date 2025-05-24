@@ -61,6 +61,7 @@
 	("C-c C-w" . opam-switch-set-switch)))
 
 (use-package dune
+  :ensure t
   :mode ("dune-project'" "dune'"))
 
 (provide 'lang/ocaml)

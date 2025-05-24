@@ -6,6 +6,7 @@
 
 ;; Replace ANSI color escape codes with faces.
 (use-package ansi-color
+  :ensure t
   :hook
   (compilation-filter-hook . ansi-color-compilation-filter)
   :custom
