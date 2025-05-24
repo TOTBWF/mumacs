@@ -26,7 +26,7 @@
 (require 'editor/auth-source)
 (require 'editor/company)
 (require 'editor/compilation)
-(require 'editor/flycheck)
+(require 'editor/flymake)
 (require 'editor/spelling)
 ;; (require 'editor/lsp)
 (require 'editor/imenu)
