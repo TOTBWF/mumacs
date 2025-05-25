@@ -87,6 +87,7 @@
   (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
+  :ensure t
   :hook
   (LaTeX-mode-hook . turn-on-cdlatex)
   (latex-mode-hook . turn-on-cdlatex)
