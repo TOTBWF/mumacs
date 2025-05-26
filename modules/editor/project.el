@@ -5,6 +5,7 @@
 ;;; Code:
 (require 'core/elpaca)
 (require 'core/meow)
+(require 'core/transient)
 
 (use-package project
   :ensure nil
@@ -23,10 +24,6 @@
     "Convert FILENAME to be relative to the root of a `project.el' PROJECT.
 Defaults to `project-current'."
     (file-relative-name filename (project-root (or project (project-current))))))
-
-;; HACK: This belongs elsewhere.
-;; Make sure that we have an up-to-date copy of transient.
-(elpaca transient)
 
 (use-package disproject
   :ensure

@@ -21,6 +21,7 @@
 (require 'core/help)
 (require 'core/vertico)
 (require 'core/backup)
+(require 'core/transient)
 
 (require 'editor/alert)
 (require 'editor/auth-source)
