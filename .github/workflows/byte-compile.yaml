@@ -15,6 +15,9 @@ jobs:
         uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs_version }}
+      - name: Touch custom.el 👉
+        run: |
+          touch custom.el
       - name: Byte Compile 🛠️
         run: |
           emacs --batch --load early-init.el --load init.el --init-directory . --funcall batch-byte-recompile-directory
