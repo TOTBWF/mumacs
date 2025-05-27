@@ -17,4 +17,4 @@ jobs:
           version: ${{ matrix.emacs_version }}
       - name: Byte Compile 🛠️
         run: |
-          emacs --no-x-resources --no-window-system --init-directory . --funcall batch-byte-recompile-directory .
+          emacs --batch --load early-init.el --load init.el --init-directory . --funcall batch-byte-recompile-directory
