@@ -6,8 +6,17 @@
 
 (defun ci-log-emacs-error (data _fill _source)
   ;; checkdoc-params: (data source)
-  "Print an Emacs error in a format that github actions can digest."
+  "Print an Emacs error in a format that github actions can digest.
+
+See `command-error-function' for documentation of arguments."
   (message "::error ::%s" (error-message-string data)))
+
+(defun ci-insert-warning-prefix (level _entry)
+  ;; checkdoc-params: (level)
+  "Insert a github actions compatible warning prefix into a buffer.
+
+See `warning-prefix-function' for documentation of arguments."
+  (insert (format ":%s" level)))
 
 (defun ci-log-byte-compile-warning (string position _fill level)
   ;; checkdoc-params: (string position fill level)
@@ -46,6 +55,7 @@ Note that this will create a buffer that visits the source of the diagnostic."
 ;; Replace error reporting functions with versions that github actions compatible versions.
 (when noninteractive
   (setq command-error-function #'ci-log-emacs-error)
+  (setq warning-prefix-function #'ci-insert-warning-prefix)
   (setq byte-compile-log-warning-function #'ci-log-byte-compile-warning)
   (setq user-emacs-directory default-directory)
   (message "::group::Loading Emacs")
