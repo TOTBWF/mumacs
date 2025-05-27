@@ -7,7 +7,7 @@
 (defun ci-log-emacs-error (data _fill _source)
   ;; checkdoc-params: (data source)
   "Print an Emacs error in a format that github actions can digest."
-  (message "::error %s" (error-message-string data)))
+  (message "::error ::%s" (error-message-string data)))
 
 (defun ci-log-byte-compile-warning (string position _fill level)
   ;; checkdoc-params: (string position fill level)
