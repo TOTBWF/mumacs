@@ -6,7 +6,7 @@
 (require 'core/meow)
 
 (use-package ediff
-  :elpaca nil
+  :ensure nil
   :commands
   ediff
   ediff-mode
