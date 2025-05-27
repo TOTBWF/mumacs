@@ -14,7 +14,7 @@ Note that this will create a buffer that visits the source of the diagnostic."
     (goto-char position)
     (message ":%s file={%s},line={%s},col={%s}::{%s}"
              level
-             (file-relative-name user-emacs-directory byte-compile-current-file)
+             (file-relative-name byte-compile-current-file user-emacs-directory)
              (line-number-at-pos)
              (1+ (- (point) (line-beginning-position)))
              string)))
