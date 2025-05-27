@@ -1,4 +1,4 @@
-;;; lang/agda ---  -*- lexical-binding: t; -*-
+;;; lang/agda ---  -*- lexical-binding: t; byte-compile-warnings: (not free-vars) -*-
 
 ;;; Commentary:
 ;; `agda2-mode' is a bit tricky to manage.  The version of Agda in use is
