@@ -8,6 +8,7 @@
 ;; customizaton of things like `source-directory' early
 ;; on in the load process.
 (load custom-file)
+(add-to-list 'load-path (concat user-emacs-directory "modules"))
 
 (setopt byte-compile-error-on-warn t)
 
@@ -30,6 +31,7 @@
 (require 'editor/flymake)
 (require 'editor/spelling)
 ;; (require 'editor/lsp)
+(require 'editor/iedit)
 (require 'editor/imenu)
 (require 'editor/winner)
 (require 'editor/project)

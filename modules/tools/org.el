@@ -50,13 +50,20 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   org-entry-blocked-p
   org-entry-is-done-p
   org-clocking-p
+  org-next-visible-heading
   :diminish
   org-cdlatex-mode
   :hook
   (org-mode-hook . org-cdlatex-mode)
   (org-mode-hook . org-mode-add-hooks)
   :spell-fu
-  (org-mode-hook :exclude org-meta-line org-link org-code)
+  (org-mode-hook
+   :exclude
+   org-meta-line
+   org-link
+   org-code
+   org-block
+   org-block-begin-line)
   :custom-face
   (org-block ((t (:background nil))))
   :custom
@@ -98,7 +105,7 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
    '(("" "tikz" t)
      ("" "tikz-cd" t)
      ("" "quiver" t)
-     ("" "preamble" t))) ;; ~/Library/texmf/tex/latex/mystyles/
+     ("" "preamble" t)))
   ;; Default to using `dvisvgm'.
   (org-preview-latex-default-process 'dvisvgm)
   ;; `dvisvgm' needs to have a non-black background color, or it will
@@ -110,7 +117,6 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   ;; Similar hack is required for source blocks.
   (org-src-block-faces
         '(("latex" (:foreground "white" :background "#010101"))))
-  ;; Also take the time to bump up the scale.
   ;; Highlight LaTeX snippets in org buffers.
   (org-highlight-latex-and-related '(native))
   ;; Org babel
@@ -224,7 +230,6 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :commands org-edna-mode
   :config
   (org-edna-mode)
-
   (defun org-edna-finder/nodes (&rest ids)
     "Find a list of org-roam nodes with given IDS.
 
@@ -285,6 +290,25 @@ Note that in the edna syntax, the IDs don't need to be quoted."
   (defun org-roam-get-template (file)
     "Construct the path to the template FILE."
     (f-join user-emacs-directory "templates" file))
+
+  (defun org-edna-finder/nodes (&rest ids)
+    "Find a list of org-roam nodes with given IDS.
+
+Edna Syntax: roam-ids(ID1 ID2 ...)
+
+Each ID is a UUID as understood by `org-roam-node-from-id'.
+
+Note that in the edna syntax, the IDs don't need to be quoted."
+    (mapcar
+     (lambda (id)
+       (let* ((node (org-roam-node-from-id id))
+		  (file (org-roam-node-file node))
+		  (buffer (find-file-noselect file)))
+	     (save-window-excursion
+	       (set-buffer buffer)
+	       (org-next-visible-heading 1)
+	       (point-marker))))
+     ids))
   :custom
   ;; Make sure that `org-roam' uses the same directory as `logseq'.
   (org-roam-directory "~/Documents/Notes")
