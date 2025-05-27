@@ -36,5 +36,20 @@
 ;; parts of the load process early.
 (setq custom-file (file-name-concat user-emacs-directory "custom.el"))
 
+;; Disable superfluous UI decorations.
+;; We could call `menu-bar-mode', `tool-bar-mode', and `scroll-bar-mode',
+;; but these all incur a somewhat costly frame redraw on startup.
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+(push '(horizontal-scroll-bars) default-frame-alist)
 
+(setq tool-bar-mode nil)
+(setq menu-bar-mode nil)
+(setq scroll-bar-mode nil)
+
+;; (unless (memq 'menu-bar minimal-emacs-ui-features)
+;;   (push '(menu-bar-lines . 0) default-frame-alist)
+;;   (unless (memq window-system '(mac ns))
+;;     (setq menu-bar-mode nil)))
 ;;; early-init.el ends here

@@ -40,13 +40,6 @@
 ;; https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746
 (setq auto-window-vscroll nil)
 
-;; Disable the window decorations
-(when window-system
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  (menu-bar-mode -1))
-
-
 ;; Disable the bell ring (Who thought this was a good idea!?!?)
 (setq ring-bell-function 'ignore)
 
