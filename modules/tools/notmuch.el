@@ -107,7 +107,7 @@ select on the mailbox MAILBOX, and then starts an IMAP IDLE.
 
 Every time the server responds to with a command during the IDLE, the
 function ON-NOTIFY is called with no arguments."
-  (if-let ((auth (car (auth-source-search :host server :user user :require '(:secret) :max 1))))
+  (if-let* ((auth (car (auth-source-search :host server :user user :require '(:secret) :max 1))))
    (with-current-buffer (imap-open server port stream 'login)
     ;; `imap-authenticate' is overkill for us.
     (imap-ok-p
