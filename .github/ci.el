@@ -5,21 +5,26 @@
 ;;; Code:
 
 (defun ci-print-diagnostic (string position _fill level)
-  "Print a byte-compiler warning in a format that github actions can digest."
   ;; checkdoc-params: (string position fill level)
-  (message ":%s file={%s},line={%s}::{%s}"
-	   level
-	   byte-compile-current-file
-	   position
-	   string))
+  "Print a byte-compiler warning in a format that github actions can digest.
+
+Note that this will create a buffer that visits the source of the diagnostic."
+  (with-current-buffer (find-file-noselect byte-compile-current-file t)
+    (goto-char position)
+    (message ":%s file={%s},line={%s},col={%s}::{%s}"
+             level
+             (buffer-file-name)
+             (line-number-at-pos)
+             (1+ (- (point) (line-beginning-position)))
+             string)))
 
 (defun ci-byte-compile ()
   "Invoke the byte compiler on the modules directory for CI."
   (let* ((coding-system-for-read 'utf-8-unix)
          (coding-system-for-write 'utf-8)
          ;; We dont want to actually create any destination files.
-	 ;; This actually doesn't matter for CI, but makes it possible to
-	 ;; evaluate the usual CI.
+         ;; This actually doesn't matter for CI, but makes it possible to
+         ;; evaluate the usual CI.
          (byte-compile-dest-file-function #'ignore)
          ;; Disable error on warn: this messes with diagnostic levels.
          (byte-compile-error-on-warn nil)
