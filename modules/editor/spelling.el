@@ -11,11 +11,6 @@
 (use-package spell-fu
   :ensure t
   :preface
-
-
-
-
-
   ;; Helper for setting up dictionaries.
   (defun spell-fu-setup-dictionaries ()
     (spell-fu-dictionary-add (spell-fu-get-personal-dictionary "en-personal" "~/.aspell.en.pws")))
@@ -48,8 +43,7 @@ hook with depth -1, but this is a hack: we really should be creating a
 `defun' instead."
   (use-package-concat
    (use-package-process-keywords name rest state)
-   (if (and (boundp 'spell-fu-faces-include) (boundp 'spell-fu-faces-exclude))
-       (mapcar
+   (mapcar
 	(pcase-lambda (`(,hook ,sym . ,faces))
 	  `(add-hook
 	    (quote ,(intern (concat (symbol-name hook) use-package-hook-name-suffix)))
@@ -57,8 +51,7 @@ hook with depth -1, but this is a hack: we really should be creating a
 	      (setq ,sym (quote ,faces))
 	      (spell-fu-mode 1))
 	    -1))
-	args)
-     (warn "use-package-handler-spell-fu: `spell-fu' face include/exclude lists not bound."))))
+	args)))
 
 (defun use-package-normalize-spell-fu (_name keyword args)
   ;; checkdoc-params: (keyword)
