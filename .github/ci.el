@@ -16,7 +16,7 @@ See `command-error-function' for documentation of arguments."
   "Insert a github actions compatible warning prefix into a buffer.
 
 See `warning-prefix-function' for documentation of arguments."
-  (cons level (format ":%s ::" level)))
+  (list level (format ":%s ::%%s" level)))
 
 (defun ci-log-byte-compile-warning (string position _fill level)
   ;; checkdoc-params: (string position fill level)
