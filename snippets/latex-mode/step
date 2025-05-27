@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: step
+# key: !s
+# --
+&= $1 (\\text{$2}) \\\\
