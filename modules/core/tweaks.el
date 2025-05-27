@@ -9,6 +9,9 @@
 
 ;;; Code:
 (require 'use-package)
+(require 'tool-bar)
+(require 'scroll-bar)
+(require 'menu-bar)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Interface Tweaks
