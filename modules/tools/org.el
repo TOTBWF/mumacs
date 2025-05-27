@@ -12,6 +12,7 @@
 
 (require 'core/elpaca)
 (require 'core/meow)
+
 (require 'lang/latex)
 
 ;; Set up a `org' menu for `meow'.
@@ -20,8 +21,6 @@
 ;; We ensure that `org' is handled via `elpaca' to make `org-roam' happy.
 (use-package org
   :ensure t
-  ;; HACK: we demand org to get keybindings to work.
-  :demand t
   :preface
   (defun resize-org-latex-overlays ()
     "Resize all org latex previews in the current buffer."
@@ -33,15 +32,6 @@
   (defun org-mode-add-hooks ()
     "Hook for adding further minor-mode hooks when we are in `org-mode'."
     (add-hook 'text-scale-mode-hook #'resize-org-latex-overlays nil t))
-
-  (defun org-xenops-dwim (&optional arg)
-    "Enable `xenops-mode' if it is not already enabled,
-and then invoke `xenops-dwim' with the prefix argument ARG."
-    (interactive "P")
-    (unless (and (featurep 'xenops) (xenops-mode))
-      (xenops-mode 1))
-    (xenops-dwim arg))
-
   ;; We want to byte compile our advice, so we predeclare the functions
   ;; to make the byte compiler aware of them.
   (declare-function org-clock-out-mode-line-advice "tools/org.el")
@@ -145,12 +135,15 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   :bind
   (:map org-mode-map
         ("$" . math-delimiters-insert)
-        ("C-c C-x C-l" . org-xenops-dwim)))
+        ("C-c C-x C-l" . xenops-dwim))
+  (:map meow-org-leader-map
+	("l" . org-store-link)
+        ("x j" . org-clock-goto)
+        ("x o" . org-clock-out)
+        ("x i" . org-clock-in-last)))
 
 (use-package org-agenda
   :ensure nil
-  :demand t
-  :after org
   :custom
   (org-agenda-inhibit-startup t)
   (org-agenda-use-time-grid nil)
@@ -164,7 +157,7 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
    '(("n" "Agenda and all tasks"
       ((agenda
 	""
-	((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
+	((org-agenda-skip-function '(org-agenda-skip-entry-if-blocked-or-done))))
        (tags-todo
 	"+todo={TODO\\|OPEN}-blocked={t}-borceux"
 	((org-agenda-overriding-header "Active tasks")))
@@ -197,11 +190,14 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
       ((org-agenda-show-inherited-tags nil))
       (org-roam-ql-nodes-files '(tags "borceux")))))
   :config
-  (defun org-agend-skip-entry-if-blocked-or-done ()
+  (defun org-agenda-skip-entry-if-blocked-or-done ()
     "Skip all `org-agenda' entries that are either blocked or marked done."
     (and (or (org-entry-blocked-p)
              (org-entry-is-done-p))
-         (org-entry-end-position))))
+         (org-entry-end-position)))
+  :bind
+  (:map meow-org-leader-map
+	("a" . org-agenda)))
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
@@ -215,18 +211,12 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
 
 ;; `ol-man' provides links to manpages.
 (use-package ol-man
-  :ensure nil
-  :after org)
+  :ensure nil)
 
 ;; Extensible dependencies for `org'.
 (use-package org-edna
   :ensure t
   :diminish org-edna-mode
-  ;; `org-edna-mode' is a global mode, so we shouldn't attach it to `org-mode-hook'.
-  ;; Moreover, `org-load-hook' is deprecated, so instead we opt to load it after org,
-  ;; `:demand' it, and then immediately enable the mode.
-  :after org
-  :demand t
   :commands org-edna-mode
   :config
   (org-edna-mode)
@@ -259,8 +249,6 @@ Note that in the edna syntax, the IDs don't need to be quoted."
 
 (use-package org-roam
   :ensure t
-  :after org
-  :demand t
   :functions
   org-roam-db-autosync-mode
   org-roam-node-find
@@ -350,14 +338,9 @@ Note that in the edna syntax, the IDs don't need to be quoted."
   (:map org-mode-map
         ("C-c C-q" . org-roam-tag-add))
   (:map meow-org-leader-map
-        ("a" . org-agenda)
         ("o" . org-roam-note-find)
         ("t" . org-roam-task-find)
         ("c" . org-roam-capture)
-        ("l" . org-store-link)
-        ("x j" . org-clock-goto)
-        ("x o" . org-clock-out)
-        ("x i" . org-clock-in-last)
         ("i" . org-roam-node-insert)
         ("d" . org-roam-dailies-goto-today)
         ("y" . org-roam-dailies-goto-yesterday)))

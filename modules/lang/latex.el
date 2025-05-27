@@ -36,8 +36,7 @@
     '("p" . outline-previous-visible-heading)
     '("n" . outline-next-visible-heading)
     '("w" . outline-move-subtree-up)
-    '("s" . outline-move-subtree-down))
-  )
+    '("s" . outline-move-subtree-down)))
 
 (use-package latex
   :ensure auctex
@@ -69,7 +68,6 @@
   (:map latex-mode-map
 	("$" . math-delimiters-insert)))
 
-
 (use-package reftex
   :ensure nil
   :hook (LaTeX-mode-hook . turn-on-reftex))
@@ -96,8 +94,7 @@
   (cdlatex-takeover-dollar nil)
   (cdlatex-env-alist
    '(("figure"
-      "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}"
-      )))
+      "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}")))
   :bind
   ;; Relinquish control of the `$' key.
   (:map cdlatex-mode-map
@@ -109,17 +106,24 @@
   :commands math-delimiters-insert)
 
 (use-package xenops
-  :preface
-  (defun xenops--dont-use-drag-and-drop ()
-    "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
-    (setq mouse-drag-and-drop-region nil))
+  :ensure t
   :hook
   (LaTeX-mode-hook . xenops-mode)
   :commands
   xenops-mode
   xenops-dwim
+  :preface
+  (defun xenops-math-activate@dont-use-drag-and-drop ()
+    "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
+    (setq mouse-drag-and-drop-region nil))
+
+  (defun xenops-dwim@toggle-xenops-mode (&rest _)
+    "Toggle `xenops-mode' on if we invoke `xenops-dwim'."
+    (unless (and (featurep 'xenops) (bound-and-true-p xenops-mode))
+      (xenops-mode 1)))
   :advice
-  (xenops-math-activate :after xenops--dont-use-drag-and-drop)
+  (xenops-math-activate :after xenops-math-activate@dont-use-drag-and-drop)
+  (xenops-dwim :before xenops-dwim@toggle-xenops-mode)
   :config
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
