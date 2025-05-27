@@ -17,9 +17,7 @@
   :ensure t
   :diminish yas-minor-mode
   :hook
-  ;; FIXME: should be smarter about deferring this. However, benchmarking
-  ;; shows that this is negligible.
-  (after-elpaca-init-hook . yas-global-mode)
+  (elpaca-after-init-hook . yas-global-mode)
   :bind
   (:map meow-leader-snippet-map
 	("n" . yas-new-snippet)
