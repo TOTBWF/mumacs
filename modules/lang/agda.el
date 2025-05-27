@@ -17,32 +17,33 @@
 
 (require 'core/elpaca)
 
-(require 'core/tweaks)
 (require 'core/path)
 (require 'tools/direnv)
 
 (require 'editor/spelling)
 (require 'editor/snippets)
 
+
 (use-package agda2-mode
   :ensure nil
   :load-path "~/.agda/share/2.8.0/emacs-mode/"
-  :mode ("\\.lagda\\.md\\'" . agda2-mode)
+  :commands agda2-mode
+  :preface
+  ;; See [NOTE: markdown-mode and auto-mode-alist]
+  (defun agda-mode@repair-auto-mode-alist ()
+    "Repair the damage done to `auto-mode-alist' by `markdown-mode'."
+    (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode)))
+  :hook
+  (elpaca-after-init-hook . agda-mode@repair-auto-mode-alist)
   :spell-fu
   (agda2-mode-hook :include default)
-  :custom
-  ;; HACK: Agda broke itself again :)
-  (agda2-program-name "/nix/store/l1nbh4rz28xfrvrpj3nnq44in6s4hxfp-ghc-9.4.6-with-packages/bin/agda"))
+  ;; HACK: we run `envrc--update' before restarting `agda' to make sure
+  ;; that we can find versions of Agda that might not be on our global path.
+  ;; This is still a bit of a stop-gap fix, as we can't easily have multiple
+  ;; versions of `agda2-mode' running side-by-side, but its better than nothing.
+  :advice
+  (agda2-restart :before envrc--update))
 
-(use-package markdown-mode
-  :ensure t
-  ;; HACK: `markdown-mode' is a bad citizen, and clobbers `auto-mode-alist'
-  ;; before it even loads. This means that anyone mentioning /anything/
-  ;; `markdown-mode' related will trash the load order.
-  ;; We actually need to force `markdown-mode' to load here; very frustrating!
-  :demand t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode)))
 
 (use-package compilation
   :ensure nil
