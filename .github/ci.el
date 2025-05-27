@@ -12,7 +12,7 @@ See https://docs.github.com/en/actions/writing-workflows/choosing-what-your-work
 Note that this will create a buffer that visits the source of the diagnostic."
   (with-current-buffer (find-file-noselect byte-compile-current-file t)
     (goto-char position)
-    (message ":%s file={%s},line={%s},col={%s}::{%s}"
+    (message ":%s file=%s,line=%s,col=%s::%s"
              level
              (file-relative-name byte-compile-current-file user-emacs-directory)
              (line-number-at-pos)
