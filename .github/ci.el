@@ -46,7 +46,10 @@ Note that this will create a buffer that visits the source of the diagnostic."
 ;; Replace error reporting functions with versions that github actions compatible versions.
 (when noninteractive
   (setq command-error-function #'ci-log-emacs-error)
-  (setq byte-compile-log-warning-function #'ci-log-byte-compile-warning))
+  (setq byte-compile-log-warning-function #'ci-log-byte-compile-warning)
+  (setq user-emacs-directory default-directory)
+  (load (concat user-emacs-directory "early-init.el"))
+  (load (concat user-emacs-directory "init.el")))
 
 
 (provide 'ci.el)

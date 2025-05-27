@@ -20,7 +20,7 @@ jobs:
           touch custom.el
       - name: Initial Load 🧰
         run: |
-          emacs --batch --init-directory . --load early-init.el --load init.el --load .github/ci.el
+          emacs --batch --load .github/ci.el
       - name: Byte Compile 🛠️
         run: |
-          emacs --batch --init-directory . --load early-init.el --load init.el --load .github/ci.el --funcall ci-byte-compile
+          emacs --batch --load .github/ci.el --funcall ci-byte-compile
