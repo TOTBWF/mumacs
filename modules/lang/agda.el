@@ -1,7 +1,16 @@
 ;;; lang/agda ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-
+;; `agda2-mode' is a bit tricky to manage.  The version of Agda in use is
+;; tied to a specific version of `agda2-mode'; this can cause problems when
+;; working with multiple versions of Agda.  This gets particularly bad when
+;; `nix' gets involved, as the `agda2-mode' files we need will be located
+;; inside of the `nix' store.
+;;
+;; This leads us to the following hack of a configuration, which hard-codes
+;; paths left and right.  This works for now, but is not sustainable in the
+;; long term.  I've attempted some other solutions (see 90b32ce) but nothing
+;; has quite worked out.
 
 ;;; Code:
 (require 'compile)
