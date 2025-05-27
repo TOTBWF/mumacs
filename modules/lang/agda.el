@@ -4,10 +4,15 @@
 
 
 ;;; Code:
+(require 'compile)
+
+(require 'core/elpaca)
+
 (require 'core/tweaks)
 (require 'core/path)
 (require 'tools/direnv)
 
+(require 'editor/spelling)
 (require 'editor/snippets)
 
 (use-package agda2-mode
