@@ -3,7 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
-(add-to-list 'load-path "~/.config/emacs/modules")
+(add-to-list 'load-path (concat user-emacs-directory "modules"))
 
 (setopt byte-compile-error-on-warn t)
 
