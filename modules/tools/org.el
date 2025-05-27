@@ -36,6 +36,12 @@
   ;; to make the byte compiler aware of them.
   (declare-function org-clock-out-mode-line-advice "tools/org.el")
   (declare-function org-clock-in-mode-line-advice "tools/org.el")
+
+  (defun org-agenda-skip-entry-if-blocked-or-done ()
+    "Skip all `org-agenda' entries that are either blocked or marked done."
+    (and (or (org-entry-blocked-p)
+             (org-entry-is-done-p))
+         (org-entry-end-position)))
   :functions
   org-entry-blocked-p
   org-entry-is-done-p
@@ -114,38 +120,8 @@
    '((emacs-lisp . t)
      (shell . t)
      (haskell . t)))
-  :config
-  (defconst org-no-clock-mode-line-string
-    (propertize "[No Clock] " 'face 'org-mode-line-no-clock))
-
-  (defface org-mode-line-no-clock
-    '((t (:inherit modus-themes-prominent-error)))
-    "Face used to display that there are no clocked tasks in the mode line."
-    :group 'org-faces)
-
-  (defun org-clock-out-mode-line-advice (&rest _)
-    (when (not (org-clocking-p))
-      (setq global-mode-string (append global-mode-string '(org-no-clock-mode-line-string)))))
-
-  (defun org-clock-in-mode-line-advice (&rest _)
-    (delq 'org-no-clock-mode-line-string global-mode-string))
-
-  (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
-  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
-  :bind
-  (:map org-mode-map
-        ("$" . math-delimiters-insert)
-        ("C-c C-x C-l" . xenops-dwim))
-  (:map meow-org-leader-map
-	("l" . org-store-link)
-        ("x j" . org-clock-goto)
-        ("x o" . org-clock-out)
-        ("x i" . org-clock-in-last)))
-
-(use-package org-agenda
-  :ensure nil
-  :custom
   (org-agenda-inhibit-startup t)
+  ;; Org agenda
   (org-agenda-use-time-grid nil)
   (org-agenda-tags-column -80)
   (org-agenda-prefix-format
@@ -190,14 +166,33 @@
       ((org-agenda-show-inherited-tags nil))
       (org-roam-ql-nodes-files '(tags "borceux")))))
   :config
-  (defun org-agenda-skip-entry-if-blocked-or-done ()
-    "Skip all `org-agenda' entries that are either blocked or marked done."
-    (and (or (org-entry-blocked-p)
-             (org-entry-is-done-p))
-         (org-entry-end-position)))
+  (defconst org-no-clock-mode-line-string
+    (propertize "[No Clock] " 'face 'org-mode-line-no-clock))
+
+  (defface org-mode-line-no-clock
+    '((t (:inherit modus-themes-prominent-error)))
+    "Face used to display that there are no clocked tasks in the mode line."
+    :group 'org-faces)
+
+  (defun org-clock-out-mode-line-advice (&rest _)
+    (when (not (org-clocking-p))
+      (setq global-mode-string (append global-mode-string '(org-no-clock-mode-line-string)))))
+
+  (defun org-clock-in-mode-line-advice (&rest _)
+    (delq 'org-no-clock-mode-line-string global-mode-string))
+
+  (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
+  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
   :bind
+  (:map org-mode-map
+        ("$" . math-delimiters-insert)
+        ("C-c C-x C-l" . xenops-dwim))
   (:map meow-org-leader-map
-	("a" . org-agenda)))
+	("a" . org-agenda)
+	("l" . org-store-link)
+        ("x j" . org-clock-goto)
+        ("x o" . org-clock-out)
+        ("x i" . org-clock-in-last)))
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
@@ -209,17 +204,19 @@
   (org-timeblock-tag-colors
    '(("teaching" . org-timeblock-teaching-face))))
 
-;; `ol-man' provides links to manpages.
-(use-package ol-man
-  :ensure nil)
-
 ;; Extensible dependencies for `org'.
 (use-package org-edna
   :ensure t
   :diminish org-edna-mode
-  :commands org-edna-mode
+  ;; `org-edna-mode' is a global mode, so we shouldn't attach it to `org-mode-hook'.
+  ;; Moreover, `org-load-hook' is deprecated, so instead we opt to load it after org,
+  ;; `:demand' it, and then immediately enable the mode.
+  :after org
+  :demand t
   :config
   (org-edna-mode)
+
+  ;; Finder for `org-roam' stuff.
   (defun org-edna-finder/nodes (&rest ids)
     "Find a list of org-roam nodes with given IDS.
 
@@ -228,16 +225,16 @@ Edna Syntax: roam-ids(ID1 ID2 ...)
 Each ID is a UUID as understood by `org-roam-node-from-id'.
 
 Note that in the edna syntax, the IDs don't need to be quoted."
-    (mapcar
-     (lambda (id)
-       (let* ((node (org-roam-node-from-id id))
-		  (file (org-roam-node-file node))
-		  (buffer (find-file-noselect file)))
-	     (save-window-excursion
-	       (set-buffer buffer)
-	       (org-next-visible-heading 1)
-	       (point-marker))))
-     ids)))
+    (cl-loop
+     for id in ids
+     for node = (org-roam-node-from-id id)
+     for file = (org-roam-node-file node)
+     for buffer = (find-file-noselect file)
+     collect
+     (save-window-excursion
+       (set-buffer buffer)
+       (org-next-visible-heading 1)
+       (point-marker)))))
 
 ;; Zotero link integration
 (use-package zotxt
