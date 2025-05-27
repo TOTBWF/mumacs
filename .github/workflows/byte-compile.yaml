@@ -20,4 +20,4 @@ jobs:
           touch custom.el
       - name: Byte Compile 🛠️
         run: |
-          emacs --batch --load early-init.el --load init.el --init-directory . --funcall batch-byte-recompile-directory
+          emacs --batch --load early-init.el --load init.el --init-directory . --funcall batch-byte-recompile-directory ./modules
