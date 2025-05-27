@@ -311,8 +311,6 @@ Note that in the edna syntax, the IDs don't need to be quoted."
      ids))
   :custom
   ;; Make sure that `org-roam' uses the same directory as `logseq'.
-  (org-roam-directory "~/Documents/Notes")
-  (org-directory "~/Documents/Notes")
   (org-roam-dailies-directory "journals/")
   (org-roam-file-exclude-regexp '("data/" "logseq/bak/"))
   (org-roam-dailies-capture-templates
@@ -379,34 +377,6 @@ Note that in the edna syntax, the IDs don't need to be quoted."
      (?B . "⚠️")
      (?C . "☕")
      (?D . "🧊"))))
-
-;; (use-package org-ql
-;;   :after org
-;;   :custom
-;;   (org-ql-views
-;;    '(("Notes: Empty Notes"
-;;       :buffers-files org-roam-list-files
-;;       :query
-;;       (and (empty-entry) (tags "note") (level 1))
-;;       :title "Empty Notes")
-;;      ("Notes: Untagged Notes"
-;;       :buffers-files org-roam-list-files
-;;       :query
-;;       (and (untagged "note") (level 1))
-;;       :title "Untagged Notes")))
-;;   :config
-;;   (org-ql-defpred empty-entry ()
-;;     "Return non-nil if the current entry contains no text beyond the headline."
-;;     :body
-;;     (save-excursion
-;;       (save-match-data
-;;         (forward-line)
-;;         (not (re-search-forward "[^[:space:]]" (save-excursion (org-entry-end-position)) t 1)))))
-
-;;   (org-ql-defpred untagged (&rest tags)
-;;     "Return non-nil if the tags of the current entry are a subset of a list of tags."
-;;     :body
-;;     (cl-subsetp (org-get-tags) tags)))
 
 (use-package org-roam-ql
   :ensure t
