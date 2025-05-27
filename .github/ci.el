@@ -4,7 +4,12 @@
 
 ;;; Code:
 
-(defun ci-print-diagnostic (string position _fill level)
+(defun ci-log-emacs-error (data _fill _source)
+  ;; checkdoc-params: (data source)
+  "Print an Emacs error in a format that github actions can digest."
+  (message "::error %s" (error-message-string data)))
+
+(defun ci-log-byte-compile-warning (string position _fill level)
   ;; checkdoc-params: (string position fill level)
   "Print a byte-compiler warning in a format that github actions can digest.
 
@@ -31,12 +36,18 @@ Note that this will create a buffer that visits the source of the diagnostic."
          (byte-compile-error-on-warn nil)
          (byte-compile-log-buffer
           (generate-new-buffer " *dummy-byte-compile-log-buffer*"))
-         (byte-compile-log-warning-function #'ci-print-diagnostic))
+         (byte-compile-log-warning-function #'ci-log-byte-compile-warning))
     ;; Invoke the byte compiler, and dump the output.
     (unwind-protect
         (byte-recompile-directory (concat user-emacs-directory "modules") 0 t)
       (ignore-errors
         (kill-buffer byte-compile-log-buffer)))))
+
+;; Replace error reporting functions with versions that github actions compatible versions.
+(when noninteractive
+  (setq command-error-function #'ci-log-emacs-error)
+  (setq byte-compile-log-warning-function #'ci-log-byte-compile-warning))
+
 
 (provide 'ci.el)
 ;;; ci.el ends here
