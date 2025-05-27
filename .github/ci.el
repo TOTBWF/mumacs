@@ -8,12 +8,13 @@
   ;; checkdoc-params: (string position fill level)
   "Print a byte-compiler warning in a format that github actions can digest.
 
+See https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-an-error-message.
 Note that this will create a buffer that visits the source of the diagnostic."
   (with-current-buffer (find-file-noselect byte-compile-current-file t)
     (goto-char position)
     (message ":%s file={%s},line={%s},col={%s}::{%s}"
              level
-             (buffer-file-name)
+             (file-relative-name user-emacs-directory byte-compile-current-file)
              (line-number-at-pos)
              (1+ (- (point) (line-beginning-position)))
              string)))
