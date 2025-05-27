@@ -40,13 +40,5 @@
     (add-to-list 'auto-insert-alist
 		 `(,regex . [(lambda () (yas-expand-snippet (yas-lookup-snippet ,template ',mode)))]))))
 
-(defun camel-case (s)
-  "Convert a snake_case string S into camelCase."
-  (let* ((upcased (mapconcat 's-capitalize (s-split "_" s 'omit-nulls) ""))
-         (head (substring upcased 0 1))
-         (tail (substring upcased 1)))
-    (concat (s-downcase head) tail)))
-
-
 (provide 'editor/snippets)
 ;;; snippets.el ends here

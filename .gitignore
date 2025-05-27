@@ -2,4 +2,5 @@
 !init.el
 !early-init.el
 !/modules/*
+!/snippets/*
 !/.github/*
