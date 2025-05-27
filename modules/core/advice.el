@@ -11,18 +11,17 @@
   ;; checkdoc-params: (keyword)
   "Ensure ARGS is a valid advice form for the `use-package' `:advice' keyword.
 See Info node `(use-package)Creating an extension'."
-  (let ((arg args)
-	args*)
-    (while arg
-      (let ((sym (caar arg))
-	    (how (cadar arg))
-	    (fn (caddar arg))
-	    (props (car (cdddar arg))))
-	(cond
-	 ((and (symbolp sym) (assq how advice--how-alist) (use-package-recognize-function fn))
-	  (setq args* (nconc args* (list (list sym how fn props)))) (setq arg (cdr arg)))
-	 (t (use-package-error (concat (symbol-name keyword) " wants arguments acceptable to `advice-add'," " or a list of such values"))))))
-    args*))
+  (cl-loop
+   for (sym how fn props) in args
+   if (and (symbolp sym)
+	   (assq how advice--how-alist)
+	   (use-package-recognize-function fn))
+   collect (list sym how fn props) into advice
+   else do
+   (use-package-error
+    (format "%s wants arguments acceptable to `advice-add', or a list of such values"
+	    keyword))
+   finally return advice))
 
 (defun use-package-autoloads-advice (_name _keyword args)
   ;; checkdoc-params: (name args)
