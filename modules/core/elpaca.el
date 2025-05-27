@@ -93,6 +93,9 @@ If DIR is non-nil, use that directory insteaad of `source-directory'."
 ;; Don't add `-hook' implicitly to hook names inside of a `:hook' block.
 (setopt use-package-hook-name-suffix nil)
 
+;; Allow `imenu' to pick up `use-package' blocks
+(setopt use-package-enable-imenu-support t)
+
 (elpaca elpaca-use-package
   ;; Enable `use-package' :ensure support for Elpaca.
   (elpaca-use-package-mode))
