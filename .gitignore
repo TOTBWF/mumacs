@@ -21,3 +21,7 @@ org-roam.db
 .org-id-locations
 /custom.el
 /url/
+/xenops
+/tree-sitter
+/tutorial
+/*.sqlite
