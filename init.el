@@ -52,6 +52,7 @@
 (require 'tools/org)
 (require 'tools/magit)
 (require 'tools/notmuch)
+(require 'tools/irc)
 (require 'tools/ripgrep)
 (require 'tools/vterm)
 
