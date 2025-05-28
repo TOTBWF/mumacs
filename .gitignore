@@ -1,6 +1,7 @@
-*
+/*
 !init.el
 !early-init.el
-!/modules/*
-!/snippets/*
-!/.github/*
+!/modules/
+!/snippets/
+!/.github/
+!*.gitignore
