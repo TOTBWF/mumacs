@@ -3,12 +3,13 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/meow)
 
 (use-package imenu
-  :straight nil
+  :ensure nil
   :bind
-  (:map meow-leader-keymap
-	("i" ("imenu" . imenu))))
+  (:map meow-leader-map
+	("i" . imenu)))
 
 (use-package imenu-list
   :commands imenu-list)

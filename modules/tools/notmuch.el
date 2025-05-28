@@ -7,16 +7,18 @@
 
 (defvar meow-notmuch-search-map (make-keymap))
 
-(meow-define-state notmuch-search
-  "Meow state for interacting with the `notmuch' search buffer."
-  :lighter "[E]"
-  :keymap meow-notmuch-search-map)
+(with-eval-after-load 'meow
+  (meow-define-state notmuch-search
+    "Meow state for interacting with the `notmuch' search buffer."
+    :lighter "[E]"
+    :keymap meow-notmuch-search-map)
 
-(add-to-list 'meow-mode-state-list '(notmuch-search-mode . notmuch-search))
-(add-to-list 'meow-mode-state-list '(notmuch-tree-mode . notmuch-search))
-(add-to-list 'meow-mode-state-list '(notmuch-show-mode . motion))
+  (add-to-list 'meow-mode-state-list '(notmuch-search-mode . notmuch-search))
+  (add-to-list 'meow-mode-state-list '(notmuch-tree-mode . notmuch-search))
+  (add-to-list 'meow-mode-state-list '(notmuch-show-mode . motion)))
 
 (use-package notmuch
+  :ensure t
   :commands notmuch
   :custom
   (notmuch-show-logo nil)
@@ -46,11 +48,12 @@
     	("SPC" . meow-keypad)))
 
 (use-package ol-notmuch
+  :ensure t
   :after notmuch org
   :demand t)
 
 (use-package sendmail
-  :straight nil
+  :ensure nil
   :custom
   (send-mail-function 'sendmail-send-it)
   (sendmail-program "/run/current-system/sw/bin/msmtp")
@@ -60,7 +63,7 @@
 
 
 ;; IMAP idle notifier.
-(require 'alert)
+;; (require 'alert)
 (require 'imap)
 
 (defun imap-idle-filter (on-notify proc string)
@@ -104,7 +107,7 @@ select on the mailbox MAILBOX, and then starts an IMAP IDLE.
 
 Every time the server responds to with a command during the IDLE, the
 function ON-NOTIFY is called with no arguments."
-  (if-let ((auth (car (auth-source-search :host server :user user :require '(:secret) :max 1))))
+  (if-let* ((auth (car (auth-source-search :host server :user user :require '(:secret) :max 1))))
    (with-current-buffer (imap-open server port stream 'login)
     ;; `imap-authenticate' is overkill for us.
     (imap-ok-p

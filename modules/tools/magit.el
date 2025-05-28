@@ -6,12 +6,13 @@
 
 ;;; Code:
 (require 'core/meow)
+(require 'tools/org)
 
-;; Set up a `git' menu for `meow'.
-(defconst meow-git-keymap (define-keymap))
-(meow-define-keys 'leader `("g" . ("git" . ,meow-git-keymap)))
+(define-leader meow-leader-git-map "g" "git"
+  "Leader keymap for git-related keybindings.")
 
 (use-package magit
+  :ensure t
   :commands magit-status magit-dispatch magit-file-dispatch
   :custom
   ;; The default is `/usr/local/bin/git', which is a wrapper around the actual
@@ -25,25 +26,28 @@
   :bind
   (:map magit-mode-map
 	("x" . magit-discard))
-  (:map meow-git-keymap
+  (:map meow-leader-git-map
 	("g" . magit-status)))
 
 (use-package forge
-  :after magit
-  :demand t)
+  :ensure t
+  :after magit)
 
 (use-package orgit
-  :after magit org
-  :demand t)
+  :ensure t
+  :after (magit org))
 
 (use-package orgit-forge
-  :after magit org forge
-  :demand t)
+  :ensure
+  (orgit-forge
+   :remotes ("totbwf" :repo "totbwf/orgit-forge" :branch "fix-autoloads")))
 
 (use-package git-timemachine
+  :after (meow)
+  :ensure t
   :commands git-timemachine
   :bind
-  (:map meow-git-keymap
+  (:map meow-leader-git-map
 	("t" . git-timemachine))
   ;; `git-timemachine' fights with `meow' over keybindings,
   ;; so we replace all the problematic bindings.

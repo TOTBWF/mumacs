@@ -3,10 +3,12 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/elpaca)
 (require 'core/meow)
+(require 'core/transient)
 
 (use-package project
-  :straight nil
+  :ensure nil
   ;; Don't bother defering; gets quite fiddly with autoloading,
   ;; and benchmarking shows that this is fast to load.
   :demand t
@@ -19,12 +21,13 @@
 
   ;; Some useful helper functions.
   (defun project-make-relative-to-root (filename &optional project)
-    "Convert FILENAME to be relative to the root of a `project.el' PROJECT.  Defaults to `project-current'"
+    "Convert FILENAME to be relative to the root of a `project.el' PROJECT.
+Defaults to `project-current'."
     (file-relative-name filename (project-root (or project (project-current))))))
 
 (use-package disproject
-  :straight
-  '(disproject
+  :ensure
+  (disproject
     :type git
     :host github
     :repo "aurtzy/disproject")

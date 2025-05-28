@@ -3,33 +3,31 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'core/straight)
+(require 'core/elpaca)
 (require 'core/meow)
 
 (use-package vertico
-  :straight (:files (:defaults "extensions/*"))
+  :ensure t
   :commands vertico-mode
-  :demand t
-  :init
-  (vertico-mode)
+  :hook
+  (elpaca-after-init-hook . vertico-mode)
   :bind
   (:map vertico-map
 	("C-<backspace>" . vertico-directory-up)))
 
 (use-package vertico-prescient
-  :after vertico
-  :demand t
-  :functions vertico-prescient-mode
-  :config
-  (vertico-prescient-mode 1))
+  :ensure t
+  :hook
+  (vertico-mode-hook . vertico-prescient-mode))
 
 ;; `consult' provides a bunch of `completing-read' functions for
 ;; various search operations.
 (use-package consult
-  :demand t)
+  :ensure t)
 
 ;; `ctrlf' is a handy way of searching within a buffer.
 (use-package ctrlf
+  :ensure t
   :commands ctrlf-forward-literal ctrlf-backward-literal
   :functions ctrlf-change-search-style
   :preface

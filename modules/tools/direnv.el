@@ -3,9 +3,12 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'core/elpaca)
+
 (use-package envrc
+  :ensure t
   :hook
-  (after-init-hook . envrc-global-mode))
+  (elpaca-after-init-hook . envrc-global-mode))
 
 (provide 'tools/direnv)
 ;;; direnv.el ends here

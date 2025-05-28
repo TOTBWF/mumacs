@@ -1,10 +1,10 @@
-;;; editor/auth-source ---  -*- lexical-binding: t; -*-
+;;; editor/auth-source.el ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
 ;;; Code:
 (use-package auth-source
-  :straight nil
+  :ensure nil
   :demand t
   :custom
   (auth-sources
@@ -14,4 +14,4 @@
      "~/.authinfo.gpg")))
 
 (provide 'editor/auth-source)
-;;; auth-sources.el ends here
+;;; auth-source.el ends here

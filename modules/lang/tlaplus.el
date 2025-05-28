@@ -6,7 +6,7 @@
 
 ;; (use-package tla-ts-mode
 ;;   :mode "\\.tla\\'"
-;;   :straight
+;;   :ensure
 ;;   (tla-ts-mode
 ;;    :type git
 ;;    :host github
@@ -19,12 +19,12 @@
 
 (use-package tla-mode
   :mode "\\.tla\\'"
-    :straight
-  (tla-mode
-   :type git
-   :host github
-   :repo "ratish-punnoose/tla-mode"
-   :files ("tla-mode.el"))
+  :ensure
+    (tla-mode
+      :type git
+      :host github
+      :repo "ratish-punnoose/tla-mode"
+      :files ("tla-mode.el"))
   )
 
 (provide 'lang/tlaplus)

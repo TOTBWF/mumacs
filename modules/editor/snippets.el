@@ -7,22 +7,22 @@
 ;; automatically.
 
 ;;; Code:
-(require 'core/straight)
+(require 'core/elpaca)
 (require 'core/meow)
 
+(define-leader meow-leader-snippet-map "s" "snippet"
+  "Leader keymap for snippet-related keybindings.")
+
 (use-package yasnippet
+  :ensure t
   :diminish yas-minor-mode
   :hook
-  ;; FIXME: should be smarter about deferring this. However, benchmarking
-  ;; shows that this is negligible.
-  (after-init-hook . yas-global-mode)
-  :config
-  (defconst meow-yas-keymap
-    (define-keymap
-      "n" '("new snippet" . yas-new-snippet)
-      "i" '("insert snippet" . yas-insert-snippet)
-      "e" '("edit snippet" . yas-visit-snippet-file)))
-  (meow-define-keys 'leader `("s" . ("snippet" . ,meow-yas-keymap))))
+  (elpaca-after-init-hook . yas-global-mode)
+  :bind
+  (:map meow-leader-snippet-map
+	("n" . yas-new-snippet)
+	("i" . yas-insert-snippet)
+	("e" . yas-visit-snippet-file)))
 
 (use-package autoinsert
   ;; Easier to just always demand this, and it's fast.
@@ -39,14 +39,6 @@
     "Automatically insert the TEMPLATE snippet when REGEX match the file name."
     (add-to-list 'auto-insert-alist
 		 `(,regex . [(lambda () (yas-expand-snippet (yas-lookup-snippet ,template ',mode)))]))))
-
-(defun camel-case (s)
-  "Convert a snake_case string S into camelCase."
-  (let* ((upcased (mapconcat 's-capitalize (s-split "_" s 'omit-nulls) ""))
-         (head (substring upcased 0 1))
-         (tail (substring upcased 1)))
-    (concat (s-downcase head) tail)))
-
 
 (provide 'editor/snippets)
 ;;; snippets.el ends here

@@ -3,41 +3,43 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'editor/spelling)
+(require 'core/meow)
 (require 'core/path)
+(require 'editor/spelling)
 (require 'outline)
 (require 'info)
 
 (defconst meow-latex-map (make-keymap))
 
-(meow-define-state latex
-  "Meow state for interacting with latex documents."
-  :lighter "[L]"
-  :keymap meow-latex-map)
+(with-eval-after-load 'meow
+  (meow-define-state latex
+    "Meow state for interacting with latex documents."
+    :lighter "[L]"
+    :keymap meow-latex-map)
 
-(setq meow-cursor-type-latex 'hollow)
+  (setq meow-cursor-type-latex 'hollow)
 
-;; HACK: This is really bad: I should be adding this as a per-mode binding that resides in the local map.
-(defun turn-on-meow-latex ()
-  "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'."
-  (meow-define-keys 'normal '("C" . meow-latex-mode)))
+  ;; HACK: This is really bad: I should be adding this as a per-mode binding that resides in the local map.
+  (defun turn-on-meow-latex ()
+    "Add bindings for `meow-latex-mode' into the `meow-normal-state-map'."
+    (meow-define-keys 'normal '("C" . meow-latex-mode)))
 
-(meow-define-keys 'latex
-  '("<escape>" . meow-normal-mode)
-  '("C" . meow-normal-mode)
-  '("i" . meow-insert-mode)
-  '("u" . meow-undo)
-  '("SPC" . meow-keypad)
-  ;; Outline mode settings
-  '("<" . outline-promote)
-  '(">" . outline-demote)
-  '("p" . outline-previous-visible-heading)
-  '("n" . outline-next-visible-heading)
-  '("w" . outline-move-subtree-up)
-  '("s" . outline-move-subtree-down))
+  (meow-define-keys 'latex
+    '("<escape>" . meow-normal-mode)
+    '("C" . meow-normal-mode)
+    '("i" . meow-insert-mode)
+    '("u" . meow-undo)
+    '("SPC" . meow-keypad)
+    ;; Outline mode settings
+    '("<" . outline-promote)
+    '(">" . outline-demote)
+    '("p" . outline-previous-visible-heading)
+    '("n" . outline-next-visible-heading)
+    '("w" . outline-move-subtree-up)
+    '("s" . outline-move-subtree-down)))
 
 (use-package latex
-  :straight auctex
+  :ensure auctex
   :hook
   (LaTeX-mode-hook . turn-on-meow-latex)
   (LaTeX-mode-hook . outline-minor-mode)
@@ -61,25 +63,29 @@
 	("S" . LaTeX-section)))
 
 (use-package tex-mode
-  :straight nil
+  :ensure nil
   :bind
   (:map latex-mode-map
 	("$" . math-delimiters-insert)))
 
-
 (use-package reftex
-  :straight nil
+  :ensure nil
   :hook (LaTeX-mode-hook . turn-on-reftex))
 
 (use-package company-reftex
-  :company
+  :ensure t
+  :after (reftex company)
+  :hook
   (LaTeX-mode-hook . company-reftex-citations))
 
 (use-package company-auctex
-  :company
+  :ensure t
+  :after (auctex company)
+  :hook
   (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
+  :ensure t
   :hook
   (LaTeX-mode-hook . turn-on-cdlatex)
   (latex-mode-hook . turn-on-cdlatex)
@@ -88,8 +94,7 @@
   (cdlatex-takeover-dollar nil)
   (cdlatex-env-alist
    '(("figure"
-      "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}"
-      )))
+      "\\begin{figure}[!ht]\n\\caption[]{}\n\\end{figure}")))
   :bind
   ;; Relinquish control of the `$' key.
   (:map cdlatex-mode-map
@@ -101,17 +106,24 @@
   :commands math-delimiters-insert)
 
 (use-package xenops
-  :preface
-  (defun xenops--dont-use-drag-and-drop ()
-    "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
-    (setq mouse-drag-and-drop-region nil))
+  :ensure t
   :hook
   (LaTeX-mode-hook . xenops-mode)
   :commands
   xenops-mode
   xenops-dwim
+  :preface
+  (defun xenops-math-activate@dont-use-drag-and-drop ()
+    "Don't enable `mouse-drag-and-drop-region' in `xenops-mode'."
+    (setq mouse-drag-and-drop-region nil))
+
+  (defun xenops-dwim@toggle-xenops-mode (&rest _)
+    "Toggle `xenops-mode' on if we invoke `xenops-dwim'."
+    (unless (and (featurep 'xenops) (bound-and-true-p xenops-mode))
+      (xenops-mode 1)))
   :advice
-  (xenops-math-activate :after xenops--dont-use-drag-and-drop)
+  (xenops-math-activate :after xenops-math-activate@dont-use-drag-and-drop)
+  (xenops-dwim :before xenops-dwim@toggle-xenops-mode)
   :config
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
@@ -122,7 +134,7 @@
 	("C-c C-x C-l" . xenops-dwim)))
 
 (use-package tex-parens
-  :straight (tex-parens :type git :host github :repo "ultronozm/tex-parens.el") ;; HACK: This is on GNU ELPA but straight.el can't find it?
+  :ensure t
   :hook
   (LaTeX-mode-hook . tex-parens-mode)
   (latex-mode-hook . tex-parens-mode)
@@ -133,7 +145,6 @@
 	("DEL" . tex-parens-delete-pair)))
 
 ;; This should probably live elsewhere.
-(require 'f)
 (require 'xwidget)
 
 (defun xwidget-webkit-browse-tex ()

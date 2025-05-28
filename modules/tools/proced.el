@@ -4,7 +4,7 @@
 
 ;;; Code:
 (use-package proced
-  :straight nil
+  :ensure nil
   :commands
   proced
   :custom

@@ -8,6 +8,7 @@
 
 ;; `iman' merges `man' and `info', and also stores an index.
 (use-package iman
+  :ensure (iman :host github :repo "emacsattic/iman")
   :commands iman
   :custom
   ;; MacOS man does not list all man pages when passed ''.
@@ -16,7 +17,7 @@
 
 (use-package man
   :commands man
-  :straight nil
+  :ensure nil
   :custom
   (manual-program "gman")
   :bind
@@ -25,10 +26,11 @@
 
 ;; `helpful' provides a nicer help menu.
 (use-package helpful
+  :ensure t
   :after meow
   :demand t
   :preface
-  ;; All of our elisp files are source controlled thanks to `straight',
+  ;; All of our elisp files are source controlled thanks to `elpaca',
   ;; so we need to set this to be able to easily navigate to them inside
   ;; of help buffers.
   (setq vc-follow-symlinks t)
@@ -47,18 +49,20 @@
 
 ;; Demos of common elisp functions.
 (use-package elisp-demos
+  :ensure t
   :advice
   (helpful-update :after elisp-demos-advice-helpful-update))
 
 ;; Override some annoying keybindings in `Info-mode'.
 (use-package info
-  :straight nil
+  :ensure nil
   :bind
   (:map Info-mode-map
 	("l" . meow-right)
 	("h" . meow-left)))
 
 (use-package marginalia
+  :ensure t
   :commands marginalia-mode
   :init
   (marginalia-mode))

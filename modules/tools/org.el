@@ -1,7 +1,7 @@
 ;;; tools/org ---  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; We really want to use a version of `org-mode' provided via `straight',
+;; We really want to use a version of `org-mode' provided via `elpaca',
 ;; so we make sure to strip out all occurances of the built-in `org' from the
 ;; load path.  This will prevent any annoying mistakes when calling `require'
 ;; on org-related files.  However, this needs to be done *extremely* early
@@ -10,17 +10,17 @@
 ;;; Code:
 (require 'face-remap)
 
+(require 'core/elpaca)
 (require 'core/meow)
+
 (require 'lang/latex)
 
 ;; Set up a `org' menu for `meow'.
-(defconst meow-org-keymap (define-keymap))
-(meow-define-keys 'leader `("o" . ("org" . ,meow-org-keymap)))
+(define-leader meow-org-leader-map "o" "org")
 
-;; We ensure that `org' is handled via `straight' to make `org-roam' happy.
+;; We ensure that `org' is handled via `elpaca' to make `org-roam' happy.
 (use-package org
-  ;; HACK: we demand org to get keybindings to work.
-  :demand t
+  :ensure t
   :preface
   (defun resize-org-latex-overlays ()
     "Resize all org latex previews in the current buffer."
@@ -32,19 +32,16 @@
   (defun org-mode-add-hooks ()
     "Hook for adding further minor-mode hooks when we are in `org-mode'."
     (add-hook 'text-scale-mode-hook #'resize-org-latex-overlays nil t))
-
-  (defun org-xenops-dwim (&optional arg)
-    "Enable `xenops-mode' if it is not already enabled,
-and then invoke `xenops-dwim' with the prefix argument ARG."
-    (interactive "P")
-    (unless (and (featurep 'xenops) (xenops-mode))
-      (xenops-mode 1))
-    (xenops-dwim arg))
-
   ;; We want to byte compile our advice, so we predeclare the functions
   ;; to make the byte compiler aware of them.
   (declare-function org-clock-out-mode-line-advice "tools/org.el")
   (declare-function org-clock-in-mode-line-advice "tools/org.el")
+
+  (defun org-agenda-skip-entry-if-blocked-or-done ()
+    "Skip all `org-agenda' entries that are either blocked or marked done."
+    (and (or (org-entry-blocked-p)
+             (org-entry-is-done-p))
+         (org-entry-end-position)))
   :functions
   org-entry-blocked-p
   org-entry-is-done-p
@@ -123,35 +120,8 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
    '((emacs-lisp . t)
      (shell . t)
      (haskell . t)))
-  :config
-  (defconst org-no-clock-mode-line-string
-    (propertize "[No Clock] " 'face 'org-mode-line-no-clock))
-
-  (defface org-mode-line-no-clock
-    '((t (:inherit modus-themes-prominent-error)))
-    "Face used to display that there are no clocked tasks in the mode line."
-    :group 'org-faces)
-
-  (defun org-clock-out-mode-line-advice (&rest _)
-    (when (not (org-clocking-p))
-      (setq global-mode-string (append global-mode-string '(org-no-clock-mode-line-string)))))
-
-  (defun org-clock-in-mode-line-advice (&rest _)
-    (delq 'org-no-clock-mode-line-string global-mode-string))
-
-  (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
-  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
-  :bind
-  (:map org-mode-map
-        ("$" . math-delimiters-insert)
-        ("C-c C-x C-l" . org-xenops-dwim)))
-
-(use-package org-agenda
-  :straight nil
-  :demand t
-  :after org
-  :custom
   (org-agenda-inhibit-startup t)
+  ;; Org agenda
   (org-agenda-use-time-grid nil)
   (org-agenda-tags-column -80)
   (org-agenda-prefix-format
@@ -163,7 +133,7 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
    '(("n" "Agenda and all tasks"
       ((agenda
 	""
-	((org-agenda-skip-function '(org-agend-skip-entry-if-blocked-or-done))))
+	((org-agenda-skip-function '(org-agenda-skip-entry-if-blocked-or-done))))
        (tags-todo
 	"+todo={TODO\\|OPEN}-blocked={t}-borceux"
 	((org-agenda-overriding-header "Active tasks")))
@@ -196,14 +166,37 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
       ((org-agenda-show-inherited-tags nil))
       (org-roam-ql-nodes-files '(tags "borceux")))))
   :config
-  (defun org-agend-skip-entry-if-blocked-or-done ()
-    "Skip all `org-agenda' entries that are either blocked or marked done."
-    (and (or (org-entry-blocked-p)
-             (org-entry-is-done-p))
-         (org-entry-end-position))))
+  (defconst org-no-clock-mode-line-string
+    (propertize "[No Clock] " 'face 'org-mode-line-no-clock))
+
+  (defface org-mode-line-no-clock
+    '((t (:inherit modus-themes-prominent-error)))
+    "Face used to display that there are no clocked tasks in the mode line."
+    :group 'org-faces)
+
+  (defun org-clock-out-mode-line-advice (&rest _)
+    (when (not (org-clocking-p))
+      (setq global-mode-string (append global-mode-string '(org-no-clock-mode-line-string)))))
+
+  (defun org-clock-in-mode-line-advice (&rest _)
+    (delq 'org-no-clock-mode-line-string global-mode-string))
+
+  (advice-add 'org-clock-out :after #'org-clock-out-mode-line-advice)
+  (advice-add 'org-clock-in :after #'org-clock-in-mode-line-advice)
+  :bind
+  (:map org-mode-map
+        ("$" . math-delimiters-insert)
+        ("C-c C-x C-l" . xenops-dwim))
+  (:map meow-org-leader-map
+	("a" . org-agenda)
+	("l" . org-store-link)
+        ("x j" . org-clock-goto)
+        ("x o" . org-clock-out)
+        ("x i" . org-clock-in-last)))
 
 ;; `org-timeblock' lets get a better daily view.
 (use-package org-timeblock
+  :ensure t
   :commands org-timeblock org-timeblock-list
   :custom-face
   (org-timeblock-teaching-face ((t (:background "#00bcff"))))
@@ -211,35 +204,48 @@ and then invoke `xenops-dwim' with the prefix argument ARG."
   (org-timeblock-tag-colors
    '(("teaching" . org-timeblock-teaching-face))))
 
-;; `ol-man' provides links to manpages.
-(use-package ol-man
-  :straight nil
-  :after org)
-
 ;; Extensible dependencies for `org'.
 (use-package org-edna
+  :ensure t
   :diminish org-edna-mode
   ;; `org-edna-mode' is a global mode, so we shouldn't attach it to `org-mode-hook'.
   ;; Moreover, `org-load-hook' is deprecated, so instead we opt to load it after org,
   ;; `:demand' it, and then immediately enable the mode.
   :after org
   :demand t
-  :commands org-edna-mode
   :config
   (org-edna-mode)
 
-  )
+  ;; Finder for `org-roam' stuff.
+  (defun org-edna-finder/nodes (&rest ids)
+    "Find a list of org-roam nodes with given IDS.
+
+Edna Syntax: roam-ids(ID1 ID2 ...)
+
+Each ID is a UUID as understood by `org-roam-node-from-id'.
+
+Note that in the edna syntax, the IDs don't need to be quoted."
+    (cl-loop
+     for id in ids
+     for node = (org-roam-node-from-id id)
+     for file = (org-roam-node-file node)
+     for buffer = (find-file-noselect file)
+     collect
+     (save-window-excursion
+       (set-buffer buffer)
+       (org-next-visible-heading 1)
+       (point-marker)))))
 
 ;; Zotero link integration
 (use-package zotxt
+  :ensure t
   :diminish
   org-zotxt-mode
   :hook
   (org-mode-hook . org-zotxt-mode))
 
 (use-package org-roam
-  :after org
-  :demand t
+  :ensure t
   :functions
   org-roam-db-autosync-mode
   org-roam-node-find
@@ -290,8 +296,6 @@ Note that in the edna syntax, the IDs don't need to be quoted."
      ids))
   :custom
   ;; Make sure that `org-roam' uses the same directory as `logseq'.
-  (org-roam-directory "~/Documents/Notes")
-  (org-directory "~/Documents/Notes")
   (org-roam-dailies-directory "journals/")
   (org-roam-file-exclude-regexp '("data/" "logseq/bak/"))
   (org-roam-dailies-capture-templates
@@ -330,20 +334,16 @@ Note that in the edna syntax, the IDs don't need to be quoted."
   :bind
   (:map org-mode-map
         ("C-c C-q" . org-roam-tag-add))
-  (:map meow-org-keymap
-        ("a" . org-agenda)
+  (:map meow-org-leader-map
         ("o" . org-roam-note-find)
         ("t" . org-roam-task-find)
         ("c" . org-roam-capture)
-        ("l" . org-store-link)
-        ("x j" . org-clock-goto)
-        ("x o" . org-clock-out)
-        ("x i" . org-clock-in-last)
         ("i" . org-roam-node-insert)
         ("d" . org-roam-dailies-goto-today)
         ("y" . org-roam-dailies-goto-yesterday)))
 
 (use-package org-fancy-priorities
+  :ensure t
   :after org
   :diminish org-fancy-priorities-mode
   :hook
@@ -358,35 +358,8 @@ Note that in the edna syntax, the IDs don't need to be quoted."
      (?C . "☕")
      (?D . "🧊"))))
 
-;; (use-package org-ql
-;;   :after org
-;;   :custom
-;;   (org-ql-views
-;;    '(("Notes: Empty Notes"
-;;       :buffers-files org-roam-list-files
-;;       :query
-;;       (and (empty-entry) (tags "note") (level 1))
-;;       :title "Empty Notes")
-;;      ("Notes: Untagged Notes"
-;;       :buffers-files org-roam-list-files
-;;       :query
-;;       (and (untagged "note") (level 1))
-;;       :title "Untagged Notes")))
-;;   :config
-;;   (org-ql-defpred empty-entry ()
-;;     "Return non-nil if the current entry contains no text beyond the headline."
-;;     :body
-;;     (save-excursion
-;;       (save-match-data
-;;         (forward-line)
-;;         (not (re-search-forward "[^[:space:]]" (save-excursion (org-entry-end-position)) t 1)))))
-
-;;   (org-ql-defpred untagged (&rest tags)
-;;     "Return non-nil if the tags of the current entry are a subset of a list of tags."
-;;     :body
-;;     (cl-subsetp (org-get-tags) tags)))
-
 (use-package org-roam-ql
+  :ensure t
   :after org org-roam
   :autoload
   org-roam-ql-agenda-block
@@ -404,6 +377,7 @@ Note that in the edna syntax, the IDs don't need to be quoted."
 ;;   (org-upcoming-modeline-mode 1))
 
 (use-package org-roam-ui
+  :ensure t
   :commands org-roam-ui)
 
 (provide 'tools/org)

@@ -12,12 +12,14 @@
 (require 'editor/project)
 
 (use-package rg
+  :ensure t
   :commands rg rg-dwim
   :bind
   (:map project-prefix-map
 	("g" . rg-dwim)))
 
 (use-package wgrep
+  :ensure t
   :demand t)
 
 (provide 'tools/ripgrep)

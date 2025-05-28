@@ -11,13 +11,13 @@
 (set-face-attribute 'default nil :family "PragmataPro Mono" :height 140)
 
 (use-package battery
-  :straight nil
+  :ensure nil
   :demand t
   :config
   (display-battery-mode 1))
 
 (use-package time
-  :straight nil
+  :ensure nil
   :demand t
   :custom
   (display-time-default-load-average nil)
@@ -25,16 +25,12 @@
   (display-time-mode 1))
 
 (use-package tab-bar
-  :straight nil
+  :ensure nil
   :demand t
   :custom
   (tab-bar-format '(tab-bar-format-history tab-bar-format-global))
   :config
   (tab-bar-mode 1))
-
-
-
-
 
 (provide 'theme/tweaks)
 ;;; tweaks.el ends here
