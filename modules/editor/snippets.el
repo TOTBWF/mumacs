@@ -24,6 +24,12 @@
 	("i" . yas-insert-snippet)
 	("e" . yas-visit-snippet-file)))
 
+(use-package yasnippet-capf
+  :ensure t
+  :functions yasnippet-capf
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+
 (use-package autoinsert
   ;; Easier to just always demand this, and it's fast.
   :demand t
