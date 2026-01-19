@@ -16,6 +16,12 @@
   :hook
   (emacs-lisp-mode-hook . company-mode))
 
+(use-package ielm
+  :ensure nil
+  :commands ielm
+  :hook
+  (ielm-mode-hook . company-mode))
+
 (use-package emacsql
   :advice
   (calculate-lisp-indent :around emacsql--calculate-vector-indent))
