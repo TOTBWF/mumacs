@@ -179,6 +179,7 @@ DOCSTRING is an optional docstring to use for the keymap."
     '("R" . meow-swap-grab)
     '("s" . meow-kill)
     '("t" . meow-till)
+    '("T" . meow-transpose-sexp)
     '("u" . meow-undo)
     '("C-r" . undo-redo)
     '("U" . meow-undo-in-selection)
