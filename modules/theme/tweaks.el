@@ -7,8 +7,11 @@
 ;; Add a bit of padding around internal borders.
 (add-to-list 'default-frame-alist '(internal-border-width . 48))
 
-;; Pragmata Pro, 14 pt font as default font.
-(set-face-attribute 'default nil :family "PragmataPro Mono" :height 140)
+(cond
+ ((find-font (font-spec :name "PragmataPro Mono"))
+  (set-face-attribute 'default nil :family "PragmataPro Mono" :height 140))
+ ((find-font (font-spec :name "Iosevka"))
+  (set-face-attribute 'default nil :family "Iosevka" :height 140)))
 
 (use-package battery
   :ensure nil
