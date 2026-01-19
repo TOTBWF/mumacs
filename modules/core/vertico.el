@@ -28,17 +28,13 @@
 ;; `ctrlf' is a handy way of searching within a buffer.
 (use-package ctrlf
   :ensure t
-  :commands ctrlf-forward-literal ctrlf-backward-literal
-  :functions ctrlf-change-search-style
-  :preface
-  (meow-define-keys
-      'normal
-    '("/" . ctrlf-forward-literal))
-  (define-key Info-mode-map (kbd "/") #'ctrlf-forward-literal)
-  :config
-  (ctrlf-change-search-style 'fuzzy)
-  (define-key ctrlf-mode-map (kbd "C-j") #'ctrlf-forward-literal)
-  (define-key ctrlf-mode-map (kbd "C-k") #'ctrlf-backward-literal))
+  :commands ctrlf-mode
+  :hook
+  (elpaca-after-init-hook . ctrlf-mode)
+  :bind
+  (:map ctrlf-mode-map
+        ("C-j" . ctrlf-forward-default)
+        ("C-k" . ctrlf-backward-default)))
 
 
 (provide 'core/vertico)
