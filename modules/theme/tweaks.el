@@ -11,7 +11,7 @@
  ((find-font (font-spec :name "PragmataPro Mono"))
   (set-face-attribute 'default nil :family "PragmataPro Mono" :height 140))
  ((find-font (font-spec :name "Iosevka"))
-  (set-face-attribute 'default nil :family "Iosevka" :height 140)))
+  (set-face-attribute 'default nil :family "Iosevka" :height 120)))
 
 (use-package battery
   :ensure nil
