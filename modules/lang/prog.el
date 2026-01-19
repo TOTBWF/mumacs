@@ -21,11 +21,12 @@
 
 ;; Instead of using `show-parens-mode', we opt to use the more powerful `highlight-parentheses-mode'.
 (use-package highlight-parentheses
+  :ensure t
   :config
   ;; We want to disable `show-paren-mode' to avoid double highlighting.
   (show-paren-mode -1)
   :diminish highlight-parentheses-mode
-  :hook (prog-mode . highlight-parentheses-mode)
+  :hook (prog-mode-hook . highlight-parentheses-mode)
   :custom
   (highlight-parentheses-colors nil "We prefer to highlight parens using faces.")
   (highlight-parentheses-background-colors nil "We prefer to highlight parens using faces.")
