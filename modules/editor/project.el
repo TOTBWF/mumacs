@@ -13,7 +13,9 @@
   ;; and benchmarking shows that this is fast to load.
   :demand t
   :custom
-  (project-vc-extra-root-markers '(".project.el" ".projectile" "cabal.project" "cabal.project.local"))
+  (project-vc-extra-root-markers
+   '(".project.el" ".projectile"
+     "cabal.project" "cabal.project.local" "hie.yaml"))
   :config
   ;; We need to place the entire prefix map into the meow leader keymap,
   ;; which is not an operations supported by `:bind-keymap'. Luckily loading

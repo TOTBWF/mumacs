@@ -22,12 +22,19 @@
      "SSH_AGENT_PID"
      "XDG_DATA_DIRS"
      "XDG_CONFIG_DIRS"
+     "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
+     "__HM_SESS_VARS_SOURCED"
      "NIX_USER_PROFILE_DIR"
      "NIX_SSL_CERT_FILE"
      "NIX_PROFILES"
      "NIX_PATH"
      "PATH"
      "MANPATH")))
+
+(use-package inheritenv
+  :ensure t
+  :demand t
+  :functions inheritenv-apply)
 
 (provide 'core/path)
 ;;; path.el ends here

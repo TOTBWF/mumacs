@@ -30,7 +30,7 @@
 (require 'editor/compilation)
 (require 'editor/flymake)
 (require 'editor/spelling)
-;; (require 'editor/lsp)
+(require 'editor/lsp)
 (require 'editor/iedit)
 (require 'editor/imenu)
 (require 'editor/winner)
@@ -47,11 +47,13 @@
 (require 'lang/nix)
 (require 'lang/ocaml)
 (require 'lang/prog)
+(require 'lang/yaml)
 
 (require 'tools/direnv)
 (require 'tools/org)
 (require 'tools/magit)
 (require 'tools/notmuch)
+(require 'tools/irc)
 (require 'tools/ripgrep)
 (require 'tools/vterm)
 

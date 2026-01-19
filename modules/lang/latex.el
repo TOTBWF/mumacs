@@ -72,17 +72,16 @@
   :ensure nil
   :hook (LaTeX-mode-hook . turn-on-reftex))
 
-(use-package company-reftex
-  :ensure t
-  :after (reftex company)
-  :hook
-  (LaTeX-mode-hook . company-reftex-citations))
+;; (use-package company-reftex
+;;   :ensure t
+;;   :after (reftex company)
+;;   :hook
+;;   (LaTeX-mode-hook . company-reftex-citations))
 
-(use-package company-auctex
-  :ensure t
-  :after (auctex company)
-  :hook
-  (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
+;; (use-package company-auctex
+;;   :ensure t
+;;   :hook
+;;   (LaTeX-mode-hook . (company-auctex-labels company-autex-macros company-auctex-symbols company-auctex-environments)))
 
 (use-package cdlatex
   :ensure t
@@ -103,6 +102,7 @@
 	("e" . cdlatex-environment)))
 
 (use-package math-delimiters
+  :ensure (:fetcher github :repo "oantolin/math-delimiters")
   :commands math-delimiters-insert)
 
 (use-package xenops
@@ -128,7 +128,7 @@
   ;; HACK: `xenops-mode' defines `xenops-math-image-scale-factor' via `defvar'
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
   ;; To work around this, we need to apply this customization after the package loads.
-  (setq xenops-math-image-scale-factor 1.65)
+  (setq xenops-math-image-scale-factor 1.25)
   :bind
   (:map LaTeX-mode-map
 	("C-c C-x C-l" . xenops-dwim)))

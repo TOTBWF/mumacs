@@ -7,6 +7,7 @@
 
 (use-package envrc
   :ensure t
+  :functions envrc--update
   :hook
   (elpaca-after-init-hook . envrc-global-mode))
 

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: popup
+# key: !popup
+# --
+::: popup
+$1
+:::

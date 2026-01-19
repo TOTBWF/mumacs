@@ -2,6 +2,6 @@
 # name: source
 # key: !src
 # --
-#+BEGIN_SRC
+#+BEGIN_SRC prog
   $1
 #+END_SRC

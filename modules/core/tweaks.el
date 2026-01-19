@@ -28,5 +28,9 @@
 ;; I'm fine with narrowing being enabled.
 (put 'narrow-to-region 'disabled nil)
 
+;; Never use tabs!
+(setq-default indent-tabs-mode nil)
+
+
 (provide 'core/tweaks)
 ;;; tweaks.el ends here

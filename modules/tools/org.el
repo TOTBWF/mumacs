@@ -135,14 +135,21 @@
 	""
 	((org-agenda-skip-function '(org-agenda-skip-entry-if-blocked-or-done))))
        (tags-todo
-	"+todo={TODO\\|OPEN}-blocked={t}-borceux"
-	((org-agenda-overriding-header "Active tasks")))
+	"+todo={OPEN}-blocked={t}+priority={A\\|B\\|C}-borceux"
+	((org-agenda-overriding-header "Active")))
+       (tags-todo
+	"+todo={TODO}-blocked={t}+priority={A\\|B\\|C}-borceux"
+	((org-agenda-overriding-header "Inbox")))
        (tags-todo
 	"+task+todo={TODO\\|OPEN}+blocked={t}-borceux"
-        ((org-agenda-overriding-header "Blocked tasks")))
+        ((org-agenda-overriding-header "Blocked")))
        (tags-todo
 	"+task+todo={WAIT}-borceux"
-        ((org-agenda-overriding-header "Blockers"))))
+        ((org-agenda-overriding-header "Blockers")))
+       (tags-todo
+	"+task+todo={TODO\\|OPEN}-blocked={t}+priority={D}-borceux"
+        ((org-agenda-overriding-header "Icebox")))
+       )
       ((org-agenda-files (org-roam-ql-nodes-files '(or (tags "task") (tags "event") (tags "daily"))))
        (org-agenda-sorting-strategy
         '(priority-down todo-state-down))))
@@ -238,11 +245,13 @@ Note that in the edna syntax, the IDs don't need to be quoted."
 
 ;; Zotero link integration
 (use-package zotxt
-  :ensure t
+  :ensure (:fetcher github :repo "egh/zotxt-emacs")
   :diminish
   org-zotxt-mode
   :hook
-  (org-mode-hook . org-zotxt-mode))
+  (org-mode-hook . org-zotxt-mode)
+  :custom
+  (zotxt-default-format "{title}"))
 
 (use-package org-roam
   :ensure t
@@ -340,6 +349,7 @@ Note that in the edna syntax, the IDs don't need to be quoted."
         ("c" . org-roam-capture)
         ("i" . org-roam-node-insert)
         ("d" . org-roam-dailies-goto-today)
+        ("D" . org-roam-dailies-capture-today)
         ("y" . org-roam-dailies-goto-yesterday)))
 
 (use-package org-fancy-priorities
@@ -360,7 +370,6 @@ Note that in the edna syntax, the IDs don't need to be quoted."
 
 (use-package org-roam-ql
   :ensure t
-  :after org org-roam
   :autoload
   org-roam-ql-agenda-block
   org-roam-ql-nodes-files

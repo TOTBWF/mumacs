@@ -56,7 +56,9 @@ NAME, KEYWORD, ARGS, REST, and STATE are explained in
 	  (mapcar
 	   (lambda (mode)
 	     `(add-hook
-	       (quote ,(intern (concat (symbol-name mode) use-package-hook-name-suffix)))
+               ;; We don't use `use-package-hook-name-suffix' here to ensure
+               ;; that we add a hook even when it is set to `nil'.
+	       (quote ,(intern (concat (symbol-name mode) "-hook")))
 	       (lambda ()
 		 (setq-local company-backends
 			     (add-to-list 'company-backends (quote ,backend))))))

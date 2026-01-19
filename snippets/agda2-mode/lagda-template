@@ -5,6 +5,7 @@
 description: |
   $1
 ---
+
 \`\`\`agda
 module `(replace-regexp-in-string "/" "."  (string-remove-suffix ".lagda.md" (string-remove-prefix "src/" (project-make-relative-to-root (buffer-file-name)))))` where
 \`\`\`
