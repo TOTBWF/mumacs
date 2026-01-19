@@ -20,19 +20,66 @@
 (require 'core/path)
 (require 'tools/direnv)
 
+(require 'editor/lsp)
 (require 'editor/spelling)
 (require 'editor/snippets)
 
 
+
 (use-package agda2-mode
-  :ensure nil
-  :load-path "~/.agda/share/2.8.0/emacs-mode/"
+  :ensure
+  (agda2-mode
+   :type git
+   :host github
+   :repo "agda/agda"
+   :files ("src/data/emacs-mode/*.el"))
+  ;; :load-path "/Users/reedmullanix/.cabal/share/x86_64-osx-ghc-9.12.2-5a96/Agda-2.9.0/emacs-mode/"
   :commands agda2-mode
   :preface
   ;; See [NOTE: markdown-mode and auto-mode-alist]
   (defun agda-mode@repair-auto-mode-alist ()
     "Repair the damage done to `auto-mode-alist' by `markdown-mode'."
     (add-to-list 'auto-mode-alist '("\\.lagda\\.md\\'" . agda2-mode)))
+
+  (defun agda2-mode@envrc-update ()
+    (envrc--update)
+    (let* ((agda-buffers
+            (cl-mapcan (lambda (buf)
+                         (with-current-buffer buf
+                           (when (equal major-mode 'agda2-mode)
+                             (list buf))))
+                       (buffer-list)))
+           (agda-bin (executable-find "agda"))
+           (default-hook (default-value 'agda2-mode-hook))
+           (agda-mode-path
+            (with-temp-buffer
+              (call-process agda-bin nil (current-buffer) nil "--emacs-mode" "locate")
+              (buffer-string))))
+
+      ;; Remove the Agda mode directory from the load path.
+      (setq load-path (delete agda2-directory load-path))
+
+      ;; Unload the Agda mode and its dependencies.
+      (unload-feature 'agda2-mode      'force)
+      (unload-feature 'agda2           'force)
+      (unload-feature 'eri             'force)
+      (unload-feature 'annotation      'force)
+      (unload-feature 'agda-input      'force)
+      (unload-feature 'agda2-highlight 'force)
+      (unload-feature 'agda2-abbrevs   'force)
+      (unload-feature 'agda2-queue     'force)
+
+      ;; Load the new version of Agda.
+      (load-file agda-mode-path)
+      (require 'agda2-mode)
+
+      (when default-hook
+        (set-default 'agda2-mode-hook default-hook))
+      (setq agda2-program-name agda-bin)
+      (mapc (lambda (buf)
+              (with-current-buffer buf
+                (agda2-mode)))
+            agda-buffers)))
   :hook
   (elpaca-after-init-hook . agda-mode@repair-auto-mode-alist)
   :spell-fu
@@ -42,7 +89,10 @@
   ;; This is still a bit of a stop-gap fix, as we can't easily have multiple
   ;; versions of `agda2-mode' running side-by-side, but its better than nothing.
   :advice
-  (agda2-restart :before envrc--update))
+  (agda2-mode :before agda2-mode@envrc-update)
+  :bind
+  (:map agda2-mode-map
+	("C-c C-x C-;" . agda2-comment-dwim-rest-of-buffer)))
 
 
 (use-package compilation
