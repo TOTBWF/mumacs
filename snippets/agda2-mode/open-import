@@ -1,0 +1,4 @@
+# key: !oi
+# name: open-import
+# --
+open import $1

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# key: !1lab-branch
+# name: 1lab-branch
+# --
+:BRANCH: [[orgit-rev:~/Documents/Projects/1lab/::${1:$(yas-choose-value (magit--with-safe-default-directory "~/Documents/Projects/1lab/" (magit-list-branch-names)))}][${1}]${0:$$(insert "]")}
