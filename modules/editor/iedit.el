@@ -4,7 +4,9 @@
 
 ;;; Code:
 
+
 (use-package iedit
+  :ensure t
   :bind
   (:map global-map
 	("C-;" . iedit-mode)))
