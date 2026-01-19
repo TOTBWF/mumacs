@@ -19,10 +19,10 @@
   ;; git binary shipped by Xcode. This adds some noticable overhead, so we opt
   ;; to use the one shipped by Xcode directly.
   (magit-git-executable
-   (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
-     (if (and (eq system-type 'darwin) (file-exists-p git-path))
-	 git-path
-       "/usr/local/bin/git")))
+   (let ((xcode-git-executable "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
+     (if (and (eq system-type 'darwin) (file-exists-p xcode-git-executable))
+	 xcode-git-executable
+       "git")))
   :bind
   (:map magit-mode-map
 	("x" . magit-discard))
