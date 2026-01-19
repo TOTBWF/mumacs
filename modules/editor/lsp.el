@@ -61,7 +61,7 @@ NAME, KEYWORD, ARGS, REST, and STATE are explained in
       (pcase arg
         (`(,mode . ,contact)
          `((eval-after-load 'eglot
-             (quote (eglot-use-package--update-server-program (quote ,mode) (eval ,contact))))
+             (quote (eglot-use-package--update-server-program (quote ,mode) (eval (quote ,contact)))))
            (add-hook
             (quote ,(intern (concat (symbol-name mode) "-hook")))
             (function eglot-ensure))))
