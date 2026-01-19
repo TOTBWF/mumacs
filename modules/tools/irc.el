@@ -11,9 +11,15 @@
 (require 'core/elpaca)
 
 (use-package circe
+  :preface
+  (defun circe-disable-font-locking ()
+    "Disable font-locking when in `circe-mode'."
+    (setq-local font-lock-ensure-function 'ignore)
+    (font-lock-mode 0))
   :ensure t
-  :commands
-  circe)
+  :commands circe
+  :hook
+  (circe-mode-hook . circe-disable-font-locking))
 
 (provide 'tools/irc)
 ;;; irc.el ends here
