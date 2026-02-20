@@ -43,43 +43,44 @@
 
   (defun agda2-mode@envrc-update ()
     (envrc--update)
-    (let* ((agda-buffers
-            (cl-mapcan (lambda (buf)
-                         (with-current-buffer buf
-                           (when (equal major-mode 'agda2-mode)
-                             (list buf))))
-                       (buffer-list)))
-           (agda-bin (executable-find "agda"))
-           (default-hook (default-value 'agda2-mode-hook))
-           (agda-mode-path
-            (with-temp-buffer
-              (call-process agda-bin nil (current-buffer) nil "--emacs-mode" "locate")
-              (buffer-string))))
+    (let ((agda-bin (executable-find "agda")))
+      (unless (equal agda-bin agda2-program-name)
+        (let* ((agda-buffers
+                (cl-mapcan (lambda (buf)
+                             (with-current-buffer buf
+                               (when (equal major-mode 'agda2-mode)
+                                 (list buf))))
+                           (buffer-list)))
+               (default-hook (default-value 'agda2-mode-hook))
+               (agda-mode-path
+                (with-temp-buffer
+                  (call-process agda-bin nil (current-buffer) nil "--emacs-mode" "locate")
+                  (buffer-string))))
 
-      ;; Remove the Agda mode directory from the load path.
-      (setq load-path (delete agda2-directory load-path))
+          ;; Remove the Agda mode directory from the load path.
+          (setq load-path (delete agda2-directory load-path))
 
-      ;; Unload the Agda mode and its dependencies.
-      (unload-feature 'agda2-mode      'force)
-      (unload-feature 'agda2           'force)
-      (unload-feature 'eri             'force)
-      (unload-feature 'annotation      'force)
-      (unload-feature 'agda-input      'force)
-      (unload-feature 'agda2-highlight 'force)
-      (unload-feature 'agda2-abbrevs   'force)
-      (unload-feature 'agda2-queue     'force)
+          ;; Unload the Agda mode and its dependencies.
+          (unload-feature 'agda2-mode      'force)
+          (unload-feature 'agda2           'force)
+          (unload-feature 'eri             'force)
+          (unload-feature 'annotation      'force)
+          (unload-feature 'agda-input      'force)
+          (unload-feature 'agda2-highlight 'force)
+          (unload-feature 'agda2-abbrevs   'force)
+          (unload-feature 'agda2-queue     'force)
 
-      ;; Load the new version of Agda.
-      (load-file agda-mode-path)
-      (require 'agda2-mode)
+          ;; Load the new version of Agda.
+          (load-file agda-mode-path)
+          (require 'agda2-mode)
 
-      (when default-hook
-        (set-default 'agda2-mode-hook default-hook))
-      (setq agda2-program-name agda-bin)
-      (mapc (lambda (buf)
-              (with-current-buffer buf
-                (agda2-mode)))
-            agda-buffers)))
+          (when default-hook
+            (set-default 'agda2-mode-hook default-hook))
+          (setq agda2-program-name agda-bin)
+          (mapc (lambda (buf)
+                  (with-current-buffer buf
+                    (agda2-mode)))
+                agda-buffers)))))
   :hook
   (elpaca-after-init-hook . agda-mode@repair-auto-mode-alist)
   :spell-fu
