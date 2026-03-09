@@ -6,56 +6,24 @@
 
 ;;; Code:
 
-(defun emacs-repository-get-revision-date (revision &optional dir)
-  "Try to get the commit time of REVISION from the Emacs sources.
-
-Returns an Emacs timestemp.
-
-If DIR is non-nil, use that directory insteaad of `source-directory'."
-  (with-temp-buffer
-    (let ((default-directory (or dir source-directory)))
-      ;; We make sure to wrap this whole block in `with-demoted-errors'
-      ;; to avoid blowing up Emacs entirely if we can't get the revision
-      ;; date for some reason.
-      (with-demoted-errors "Error running git show -s --format=%%cI: %S"
-	(with-temp-buffer
-	  (let ((exit-code (call-process "git" nil t nil "show" "-s" "--format=%cI" revision))
-		(contents (buffer-substring-no-properties (point-min) (- (point-max) 1))))
-	    (if (zerop exit-code)
-		(encode-time (iso8601-parse contents))
-	      (error "%s" contents))))))))
-
-
-;; Set `emacs-build-time' explicitly if it looks like we were built from source.
-;; We can use `emacs-repository-version' to determine if Emacs was built from
-;; a repository checkout.
-(when (and emacs-repository-version
-	 (not emacs-build-time)
-	 (not (bound-and-true-p byte-compile-current-file)))
-  ;; If it looks like we were built from source, we can try to work
-  ;; backwards from the git hash to determine a date.
-  ;; Note that this requires the `source-directory' to be set
-  ;; to an actual git repository: this can be the case with
-  ;; some nix-built versions of Emacs. In these situation,
-  ;; users are recommended to set `source-directory' in `custom.el'.
-  (defvar elpaca-core-date (emacs-repository-get-revision-date emacs-repository-version)))
-
-(defvar elpaca-installer-version 0.11)
+;; Bootstrap `elpaca'.
+;; This is taken from https://github.com/progfolio/elpaca?tab=readme-ov-file#installer.
+(defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order
-  '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-           :ref nil :depth 1 :inherit ignore
-           :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-           :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+(defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca-activate)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
        (default-directory repo))
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
+    (when (<= emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
         (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
                   ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
