@@ -129,6 +129,21 @@
   ;; instead of `defcustom', which makes `:custom' apply at the incorrect time.
   ;; To work around this, we need to apply this customization after the package loads.
   (setq xenops-math-image-scale-factor 1.25)
+
+
+  ;; Customize what `xenops' thinks environments are.
+  (let* ((env-rx (rx (or "align" "equation" "tikzpicture" "mathpar" "gather")))
+         (begin-rx (rx "\\begin{" (regexp env-rx) (? "*") "}"))
+         (end-rx (rx "\\end{" (regexp env-rx) (? "*") "}")))
+    (setq xenops-math-environment-delimited-inline-math-delimiters
+          (list begin-rx end-rx))
+
+    (setf (alist-get :delimiters (alist-get 'block-math xenops-elements))
+          `((,(rx line-start (* (any blank)) (regex begin-rx))
+             ,(rx line-start (* (any blank)) (regex end-rx)))
+            ("^[ \t]*\\\\\\["
+             "^[ \t]*\\\\\\]"))))
+
   :bind
   (:map LaTeX-mode-map
 	("C-c C-x C-l" . xenops-dwim)))
