@@ -34,6 +34,9 @@ Defaults to `project-current'."
     :host github
     :repo "aurtzy/disproject")
   :demand t
+  :custom
+  (disproject-find-regexp-command
+   #'rg-project)
   :config
   (meow-define-keys 'leader `("p" . ("project" . disproject-dispatch))))
 
