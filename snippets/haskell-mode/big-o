@@ -1,0 +1,4 @@
+# key: !O
+# name: big-o
+# --
+\\(\mathcal{O}($1)\\)

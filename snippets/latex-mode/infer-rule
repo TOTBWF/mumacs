@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: infer-rule
-# key: infer
+# key: !infer
 # --
 \inferrule*{%
   $1 \\\\

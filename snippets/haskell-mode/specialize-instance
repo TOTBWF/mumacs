@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: specialize-instance
+# key: !si
+# --
+{-# SPECIALIZE instance $1 #-}
