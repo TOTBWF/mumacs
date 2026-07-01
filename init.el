@@ -40,7 +40,7 @@
 (require 'lang/agda)
 (require 'lang/elisp)
 (require 'lang/latex)
-;; (require 'lang/lean)
+(require 'lang/lean)
 (require 'lang/haskell)
 (require 'lang/markdown)
 (require 'lang/narya)
