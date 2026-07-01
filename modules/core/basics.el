@@ -59,5 +59,32 @@
   :ensure t
   :demand t)
 
+(defun randomize-region (beg end)
+  (interactive "r")
+  (replace-region-contents
+   (min beg end)
+   (max beg end)
+   (lambda ()
+     (concat (shuffle-list (string-to-list (buffer-string)))))))
+
+(defun shuffle-list (list)
+  "Randomly permute the elements of LIST.
+All permutations equally likely."
+  (let ((i 0)
+  j
+  temp
+  (len (length list)))
+    (while (< i len)
+      (setq j (+ i (random (- len i))))
+      (setq temp (nth i list))
+      (setcar (nthcdr i list) (nth j list))
+      (setcar (nthcdr j list) temp)
+      (setq i (1+ i))))
+  list)
+
+(defun whitespace-compress-region (start end)
+  (interactive "@r")
+  (replace-regexp-in-region (rx (+ " ")) " " start end))
+
 (provide 'core/basics)
 ;;; basics.el ends here
